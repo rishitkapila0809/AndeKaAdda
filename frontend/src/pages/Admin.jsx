@@ -5,7 +5,7 @@ import {
   useRef
 } from 'react'
 import AdminLogin from './AdminLogin'
-const socket = io('http://192.168.31.68:5000', {
+const socket = io(import.meta.env.VITE_API_URL, {
   transports: ['websocket'],
   reconnection: true,
   reconnectionAttempts: Infinity,
@@ -15,6 +15,16 @@ const socket = io('http://192.168.31.68:5000', {
 
 
 function Admin({ isAdminLoggedIn, onAdminLogin, onAdminLogout, apiUrl }) {
+
+  const notificationSound =
+  new Audio('/notification.mp3')
+
+  const cancelSound =
+  new Audio('/cancel.mp3')
+
+  
+
+
   const [
   isOrderingEnabled,
   setIsOrderingEnabled
@@ -33,8 +43,12 @@ function Admin({ isAdminLoggedIn, onAdminLogin, onAdminLogout, apiUrl }) {
   const [latestOrder, setLatestOrder] =
   useState(null)
   const [, forceUpdate] = useState(0)
+
   const latestOrderIdRef =
   useRef(null)
+
+  const previousOrdersRef =
+  useRef([])
   
 
   useEffect(() => {
@@ -75,7 +89,7 @@ function Admin({ isAdminLoggedIn, onAdminLogin, onAdminLogout, apiUrl }) {
   data.orders[0].orderId !==
 latestOrderIdRef.current
 ) {
-
+      notificationSound.play()
       setLatestOrder(
         data.orders[0]
       )
@@ -91,9 +105,41 @@ if (data.orders.length > 0) {
 
   latestOrderIdRef.current =
     data.orders[0].orderId
-}
+}   
+
 
     setOrders(data.orders)
+    previousOrdersRef.current =
+  data.orders
+
+
+  const previousOrders =
+  previousOrdersRef.current
+
+const cancelledOrder =
+  data.orders.find(
+    newOrder => {
+
+      const oldOrder =
+        previousOrders.find(
+          order =>
+            order.orderId ===
+            newOrder.orderId
+        )
+
+      return (
+        oldOrder &&
+        oldOrder.status !==
+          'Cancelled' &&
+        newOrder.status ===
+          'Cancelled'
+      )
+    }
+  )
+
+if (cancelledOrder) {
+  cancelSound.play()
+}
   }
 }
 

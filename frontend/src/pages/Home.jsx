@@ -214,7 +214,7 @@ localStorage.setItem(
         setError('❌ Failed to place order: ' + data.message)
       }
     } catch (err) {
-      setError('❌ Connection error: Make sure backend is running on http://192.168.31.68:5000')
+      setError('❌ Connection error: Make sure backend is running on import.meta.env.VITE_API_URL')
       console.error('Error placing order:', err)
     } finally {
       setLoading(false)

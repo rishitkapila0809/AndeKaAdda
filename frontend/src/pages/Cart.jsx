@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { io } from 'socket.io-client'
 import { useNavigate } from 'react-router-dom'
-const socket = io('http://192.168.31.68:5000', {
+const socket = io(import.meta.env.VITE_API_URL, {
   transports: ['websocket'],
   reconnection: true,
   reconnectionAttempts: Infinity,

@@ -11,7 +11,7 @@ function AdminLogin({ onAdminLogin }) {
     setError('')
 
     try {
-      const response = await fetch('http://192.168.31.68:5000/api/admin/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
