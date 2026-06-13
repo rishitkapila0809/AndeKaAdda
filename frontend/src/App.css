@@ -937,3 +937,10 @@ body {
       scale(1);
   }
 }
+
+
+
+.product.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}

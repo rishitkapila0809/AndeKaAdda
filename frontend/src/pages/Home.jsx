@@ -280,25 +280,20 @@ localStorage.setItem(
           <p className="total">Total: ₹{boiledEggTotal}</p>
         </div>
 
-        <div className="product">
-          <h2>🍛 Egg Bhurji</h2>
-          <p className="price">₹40 per plate</p>
-          <p className="note">1 plate contains 2 eggs</p>
-          <select
-  value={bhurjiQuantity}
-  onChange={(e) =>
-    setBhurjiQuantity(Number(e.target.value))
-  }
-  className="quantity-input"
->
-  {[...Array(21).keys()].map((num) => (
-    <option key={num} value={num}>
-      {num}
-    </option>
-  ))}
-</select>
-          <p className="total">Total: ₹{bhurjiTotal}</p>
-        </div>
+        <div className="product disabled">
+  <h2>🍛 Egg Bhurji</h2>
+  <p className="price">Coming Soon...</p>
+  <p className="note">This item is currently unavailable</p>
+
+  <select
+    disabled
+    className="quantity-input"
+  >
+    <option>Coming Soon...</option>
+  </select>
+
+  <p className="total">Coming Soon...</p>
+</div>
       </div>
 
       <div className="delivery-section">
