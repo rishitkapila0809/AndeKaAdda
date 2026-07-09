@@ -252,7 +252,7 @@ localStorage.setItem(
       }}
     >
       You can order only
-      between   18:30 PM – 20:00 PM
+      between   18:00 PM – 20:00 PM
     </div>
   </div>
 )}
