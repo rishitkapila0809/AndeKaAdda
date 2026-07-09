@@ -481,17 +481,18 @@ const filteredOrders = orders.filter(
   </div>
 
   <h2
-    style={{
-      marginBottom: '20px',
-      color: '#ffffff'
-    }}
-  >
-    Orders for{' '}
-    {
-      new Date(selectedDate)
-        .toLocaleDateString()
-    }
-  </h2>
+  style={{
+    marginBottom: '20px',
+    color: '#ffffff'
+  }}
+>
+  Orders for{' '}
+  {new Date(selectedDate).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })}
+</h2>
 
 
   <button
