@@ -20,24 +20,16 @@
   --success: #10b981;
   --danger: #ef4444;
   --warning: #ff6b6b;
-  --bg: #ffffff;
-  --bg-light: #f9fafb;
-  --text: #111827;
-  --text-light: #6b7280;
-  --border: #e5e7eb;
+  --bg: #1E293B;
+--bg-light: #0F172A;
+--text: #F8FAFC;
+--text-light: #CBD5E1;
+--border: #334155;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1f2937;
-    --bg-light: #111827;
-    --text: #f9fafb;
-    --text-light: #d1d5db;
-    --border: #374151;
-  }
-}
+
 
 body {
   font-family: system-ui, -apple-system, sans-serif;
@@ -943,4 +935,30 @@ body {
 .product.disabled {
   opacity: 0.6;
   pointer-events: none;
+}
+
+input,
+select,
+textarea {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  color-scheme: dark;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-light);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+option {
+  background: var(--bg);
+  color: var(--text);
 }
