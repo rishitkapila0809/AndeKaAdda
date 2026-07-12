@@ -1,5 +1,8 @@
 const sqlite3 = require('sqlite3').verbose()
 
+console.log('Current working directory:', process.cwd())
+console.log('Database path:', require('path').resolve('./database/orders.db'))
+
 const db = new sqlite3.Database(
   './database/orders.db',
   (err) => {
