@@ -102,6 +102,14 @@ router.get('/admin/all', verifyAdmin, (req, res) => {
       })
     }
 
+    console.log(
+  'Admin fetched',
+  rows.length,
+  'orders'
+)
+
+console.log(rows)
+
     res.json({
       success: true,
       orders: rows
