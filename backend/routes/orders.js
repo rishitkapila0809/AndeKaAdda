@@ -69,6 +69,13 @@ router.post('/create', (req, res) => {
 
       const io = req.app.get('io')
 
+      console.log(
+  'Order saved:',
+  orderId,
+  buyerName,
+  orderDate
+)
+
 io.emit('ordersUpdated')
 
       res.json({
