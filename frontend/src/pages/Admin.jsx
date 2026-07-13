@@ -395,10 +395,18 @@ const filteredOrders = orders.filter(
       return false
     }
 
-    const orderDate =
-      parsedDate
-        .toISOString()
-        .split('T')[0]
+    const year = parsedDate.getFullYear()
+
+const month = String(
+  parsedDate.getMonth() + 1
+).padStart(2, '0')
+
+const day = String(
+  parsedDate.getDate()
+).padStart(2, '0')
+
+const orderDate =
+  `${year}-${month}-${day}`
 
     return orderDate === selectedDate
   }
