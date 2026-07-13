@@ -390,62 +390,67 @@ router.put(
 
 router.get(
   '/ordering-status',
-  (req, res) => {
+  async (req, res) => {
 
-    db.get(
-      `
-      SELECT isOrderingEnabled
-      FROM settings
-      WHERE id = 1
-      `,
-      [],
-      (err, row) => {
+    try {
 
-        if (err) {
-          return res.json({
-            success: false
-          })
-        }
+      const result = await db.query(
+        `
+        SELECT "isOrderingEnabled"
+        FROM settings
+        WHERE id = 1
+        `
+      )
 
-        res.json({
-          success: true,
-          isOrderingEnabled:
-            row.isOrderingEnabled
-        })
-      }
-    )
+      res.json({
+        success: true,
+        isOrderingEnabled:
+          result.rows[0].isOrderingEnabled
+      })
+
+    } catch {
+
+      res.json({
+        success: false
+      })
+
+    }
+
   }
 )
 
 router.put(
   '/ordering-status',
   verifyAdmin,
-  (req, res) => {
+  async (req, res) => {
 
-    const {
-      isOrderingEnabled
-    } = req.body
+    try {
 
-    db.run(
-      `
-      UPDATE settings
-      SET isOrderingEnabled = ?
-      WHERE id = 1
-      `,
-      [isOrderingEnabled],
-      function(err) {
+      const {
+        isOrderingEnabled
+      } = req.body
 
-        if (err) {
-          return res.json({
-            success: false
-          })
-        }
+      await db.query(
+        `
+        UPDATE settings
+        SET "isOrderingEnabled" = $1
+        WHERE id = 1
+        `,
+        [isOrderingEnabled]
+      )
 
-        res.json({
-          success: true
-        })
-      }
-    )
+      res.json({
+        success: true
+      })
+
+    } catch {
+
+      res.json({
+        success: false
+      })
+
+    }
+
   }
 )
 
