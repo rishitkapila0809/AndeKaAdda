@@ -162,6 +162,10 @@ useEffect(() => {
 
 
   const loadOrders = async () => {
+
+  console.log("loadOrders started")
+
+ 
   try {
     const token = localStorage.getItem('adminToken')
 
@@ -174,7 +178,11 @@ useEffect(() => {
       }
     )
 
+    console.log("Fetch completed", response.status)
+
     const data = await response.json()
+
+    console.log(data)
 
     if (data.success) {
 
