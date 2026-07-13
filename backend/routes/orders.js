@@ -403,10 +403,10 @@ router.get(
       )
 
       res.json({
-        success: true,
-        isOrderingEnabled:
-          result.rows[0].isOrderingEnabled
-      })
+  success: true,
+  isOrderingEnabled:
+    Boolean(result.rows[0].isOrderingEnabled)
+})
 
     } catch {
 

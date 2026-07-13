@@ -74,9 +74,8 @@ useEffect(() => {
   if (data.success) {
 
     setIsOrderingEnabled(
-      data.isOrderingEnabled
-      === 1
-    )
+  data.isOrderingEnabled
+)
   }
 }
 
