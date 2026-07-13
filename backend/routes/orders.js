@@ -107,28 +107,34 @@ router.get('/admin/all', verifyAdmin, async (req, res) => {
   }
 })
 
-router.get('/customer/:phone', (req, res) => {
-  const phone = req.params.phone
+router.get('/customer/:phone', async (req, res) => {
+  try {
 
-  const query = `
-    SELECT * FROM orders
-    WHERE phoneNumber = ?
-    ORDER BY id DESC
-  `
+    const phone = req.params.phone
 
-  db.all(query, [phone], (err, rows) => {
-    if (err) {
-      return res.json({
-        success: false,
-        message: err.message
-      })
-    }
+    const result = await db.query(
+      `
+      SELECT *
+      FROM orders
+      WHERE "phoneNumber" = $1
+      ORDER BY id DESC
+      `,
+      [phone]
+    )
 
     res.json({
       success: true,
-      orders: rows
+      orders: result.rows
     })
-  })
+
+  } catch (err) {
+
+    res.json({
+      success: false,
+      message: err.message
+    })
+
+  }
 })
 
 
