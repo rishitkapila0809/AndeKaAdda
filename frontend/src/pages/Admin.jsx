@@ -107,6 +107,16 @@ if (data.orders.length > 0) {
     data.orders[0].orderId
 }   
 
+console.log("Total orders:", data.orders.length)
+
+data.orders.forEach(order => {
+  console.log(
+    order.orderId,
+    order.orderDate,
+    order.status
+  )
+})
+
 
     setOrders(data.orders)
     previousOrdersRef.current =
