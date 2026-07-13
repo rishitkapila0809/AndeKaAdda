@@ -1,8 +1,10 @@
 require('dotenv').config()
+require('./database/postgres')
 const express = require('express')
 const orderRoutes = require('./routes/orders')
 const cors = require('cors')
 const adminRoutes = require('./routes/admin')
+require('./database/postgres')
 
 
 
