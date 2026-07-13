@@ -122,6 +122,17 @@ router.get('/admin/all', verifyAdmin, (req, res) => {
       })
     }
 
+db.get(
+    "SELECT COUNT(*) AS total FROM orders",
+    (err, row) => {
+      console.log(
+        "Orders during admin fetch:",
+        row.total
+      )
+    }
+  )
+
+
     console.log(
   'Admin fetched',
   rows.length,
