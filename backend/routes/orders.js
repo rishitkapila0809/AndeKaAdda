@@ -139,31 +139,40 @@ router.get('/customer/:phone', async (req, res) => {
 
 
 
-router.put('/:orderId/status', verifyAdmin, (req, res) => {
-  const { orderId } = req.params
-  const { status } = req.body
+router.put('/:orderId/status', verifyAdmin, async (req, res) => {
 
-  const query = `
-    UPDATE orders
-    SET status = ?
-    WHERE orderId = ?
-  `
+  try {
 
-  db.run(query, [status, orderId], function(err) {
-    if (err) {
-      return res.json({
-        success: false,
-        message: err.message
-      })
-    }
-const io = req.app.get('io')
+    const { orderId } = req.params
+    const { status } = req.body
 
-io.emit('ordersUpdated')
+    await db.query(
+      `
+      UPDATE orders
+      SET "status" = $1
+      WHERE "orderId" = $2
+      `,
+      [status, orderId]
+    )
+
+    const io = req.app.get('io')
+
+    io.emit('ordersUpdated')
+
     res.json({
       success: true,
       message: 'Order status updated'
     })
-  })
+
+  } catch (err) {
+
+    res.json({
+      success: false,
+      message: err.message
+    })
+
+  }
+
 })
 
 router.delete('/:orderId', verifyAdmin, (req, res) => {
