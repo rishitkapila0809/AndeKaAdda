@@ -222,6 +222,25 @@ localStorage.setItem(
 
   return (
     <div className="home-container">
+
+      <div
+  style={{
+    backgroundColor: '#92400e',
+    color: 'white',
+    padding: '16px',
+    borderRadius: '14px',
+    marginBottom: '20px',
+    textAlign: 'center',
+    border: '1px solid #facc15'
+  }}
+>
+  <strong>⚠️ Important Notice</strong>
+  <br /><br />
+  Orders are accepted <strong>only till 8:00 PM</strong>.
+  Due to a temporary technical issue, the website may still allow orders after 8:00 PM. Any orders placed after 8:00 PM will be automatically cancelled and will not be processed.
+  <br /><br />
+  Thank you for your understanding 
+</div>
       
       {error && <div className="error-message">{error}</div>}
       
