@@ -76,6 +76,16 @@ router.post('/create', (req, res) => {
   orderDate
 )
 
+db.get(
+  "SELECT COUNT(*) AS total FROM orders",
+  (e, row) => {
+    console.log(
+      "Orders after insert:",
+      row.total
+    )
+  }
+)
+
 io.emit('ordersUpdated')
 
       res.json({
