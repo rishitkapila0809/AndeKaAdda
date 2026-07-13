@@ -104,6 +104,16 @@ router.get('/admin/all', verifyAdmin, (req, res) => {
     ORDER BY id DESC
   `
 
+  db.get(
+  "SELECT COUNT(*) AS total FROM orders",
+  (e, row) => {
+    console.log(
+      "Orders during admin fetch:",
+      row.total
+    )
+  }
+)
+
   db.all(query, [], (err, rows) => {
     if (err) {
       return res.json({
