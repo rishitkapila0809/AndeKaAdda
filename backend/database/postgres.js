@@ -7,12 +7,10 @@ const pool = new Pool({
   }
 })
 
-pool.connect()
-  .then(() => {
-    console.log('Connected to Neon PostgreSQL')
-  })
-  .catch(err => {
-    console.error('Neon connection failed:', err)
-  })
+pool.on('error', (err) => {
+  console.error('Unexpected PostgreSQL error:', err)
+})
+
+console.log('Neon PostgreSQL pool initialized')
 
 module.exports = pool
