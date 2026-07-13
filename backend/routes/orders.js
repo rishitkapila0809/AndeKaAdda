@@ -236,69 +236,72 @@ router.put('/:orderId/payment', verifyAdmin, async (req, res) => {
   }
 
 })
+
 router.put(
   '/:orderId/eta',
   verifyAdmin,
-  (req, res) => {
-    const { orderId } = req.params
-    const { minutes } = req.body
+  async (req, res) => {
 
-    const getQuery = `
-      SELECT estimatedDeliveryTime
-      FROM orders
-      WHERE orderId = ?
-    `
+    try {
 
-    db.get(
-      getQuery,
-      [orderId],
-      (err, order) => {
-        if (err || !order) {
-          return res.json({
-            success: false,
-            message: 'Order not found'
-          })
-        }
+      const { orderId } = req.params
+      const { minutes } = req.body
 
-        const currentETA =
-          new Date(order.estimatedDeliveryTime)
-
-        currentETA.setMinutes(
-          currentETA.getMinutes() + minutes
-        )
-
-        const updatedETA =
-          currentETA.toISOString()
-
-        const updateQuery = `
-          UPDATE orders
-          SET estimatedDeliveryTime = ?
-          WHERE orderId = ?
+      const result = await db.query(
         `
+        SELECT "estimatedDeliveryTime"
+        FROM orders
+        WHERE "orderId" = $1
+        `,
+        [orderId]
+      )
 
-        db.run(
-          updateQuery,
-          [updatedETA, orderId],
-          function(err) {
-            if (err) {
-              return res.json({
-                success: false,
-                message: err.message
-              })
-            }
-
-            const io = req.app.get('io')
-
-            io.emit('ordersUpdated')
-
-            res.json({
-              success: true,
-              message: 'ETA updated'
-            })
-          }
-        )
+      if (result.rows.length === 0) {
+        return res.json({
+          success: false,
+          message: 'Order not found'
+        })
       }
-    )
+
+      const currentETA =
+        new Date(
+          result.rows[0].estimatedDeliveryTime
+        )
+
+      currentETA.setMinutes(
+        currentETA.getMinutes() + minutes
+      )
+
+      const updatedETA =
+        currentETA.toISOString()
+
+      await db.query(
+        `
+        UPDATE orders
+        SET "estimatedDeliveryTime" = $1
+        WHERE "orderId" = $2
+        `,
+        [updatedETA, orderId]
+      )
+
+      const io = req.app.get('io')
+
+      io.emit('ordersUpdated')
+
+      res.json({
+        success: true,
+        message: 'ETA updated'
+      })
+
+    } catch (err) {
+
+      res.json({
+        success: false,
+        message: err.message
+      })
+
+    }
+
   }
 )
 
