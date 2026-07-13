@@ -1,151 +1,110 @@
 const express = require('express')
-const db = require('../database/db')
+const db = require('../database/postgres')
 const verifyAdmin = require('../middleware/auth')
 const router = express.Router()
 
 
-router.post('/create', (req, res) => {
-  const {
-    buyerName,
-    phoneNumber,
-    block,
-    roomNumber,
-    boiledEggs,
-    eggBhurji,
-    totalAmount
-  } = req.body
-
-  const orderId = 'ORD' + Date.now()
-  const status = 'Pending'
-  const paymentStatus = 'Pending'
-  const orderDate = new Date().toISOString()
-
-  const query = `
-    INSERT INTO orders (
-      orderId,
+router.post('/create', async (req, res) => {
+  try {
+    const {
       buyerName,
-      estimatedDeliveryTime,
-      phoneNumber,
-      blockName,
-      roomNumber,
-      boiledEggs,
-      eggBhurji,
-      totalAmount,
-      status,
-      paymentStatus,
-      orderDate
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `
-  const estimatedDeliveryTime =
-  new Date(
-    Date.now() + 30 * 60 * 1000
-  ).toISOString()
-  
-
-  db.run(
-    query,
-    [
-      orderId,
-      buyerName,
-      estimatedDeliveryTime,
       phoneNumber,
       block,
       roomNumber,
       boiledEggs,
       eggBhurji,
-      totalAmount,
-      status,
-      paymentStatus,
-      orderDate
-    ],
-    function(err) {
-      if (err) {
-        return res.json({
-          success: false,
-          message: err.message
-        })
-      }
+      totalAmount
+    } = req.body
 
-      const io = req.app.get('io')
+    const orderId = 'ORD' + Date.now()
+    const status = 'Pending'
+    const paymentStatus = 'Pending'
+    const orderDate = new Date().toISOString()
 
-      console.log(
-  'Order saved:',
-  orderId,
-  buyerName,
-  orderDate
-)
+    const estimatedDeliveryTime =
+      new Date(
+        Date.now() + 30 * 60 * 1000
+      ).toISOString()
 
-db.get(
-  "SELECT COUNT(*) AS total FROM orders",
-  (e, row) => {
-    console.log(
-      "Orders after insert:",
-      row.total
-    )
-  }
-)
-
-io.emit('ordersUpdated')
-
-      res.json({
-        success: true,
-        message: 'Order placed successfully',
-        orderId
-      })
-    }
-  )
-})
-
-
-router.get('/admin/all', verifyAdmin, (req, res) => {
-  const query = `
-    SELECT * FROM orders
-    ORDER BY id DESC
-  `
-
-  db.get(
-  "SELECT COUNT(*) AS total FROM orders",
-  (e, row) => {
-    console.log(
-      "Orders during admin fetch:",
-      row.total
-    )
-  }
-)
-
-  db.all(query, [], (err, rows) => {
-    if (err) {
-      return res.json({
-        success: false,
-        message: err.message
-      })
-    }
-
-db.get(
-    "SELECT COUNT(*) AS total FROM orders",
-    (err, row) => {
-      console.log(
-        "Orders during admin fetch:",
-        row.total
+    await db.query(
+      `
+      INSERT INTO orders (
+        orderId,
+        buyerName,
+        estimatedDeliveryTime,
+        phoneNumber,
+        blockName,
+        roomNumber,
+        boiledEggs,
+        eggBhurji,
+        totalAmount,
+        status,
+        paymentStatus,
+        orderDate
       )
-    }
-  )
+      VALUES (
+        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12
+      )
+      `,
+      [
+        orderId,
+        buyerName,
+        estimatedDeliveryTime,
+        phoneNumber,
+        block,
+        roomNumber,
+        boiledEggs,
+        eggBhurji,
+        totalAmount,
+        status,
+        paymentStatus,
+        orderDate
+      ]
+    )
 
+    const io = req.app.get('io')
 
-    console.log(
-  'Admin fetched',
-  rows.length,
-  'orders'
-)
-
-console.log(rows)
+    io.emit('ordersUpdated')
 
     res.json({
       success: true,
-      orders: rows
+      message: 'Order placed successfully',
+      orderId
     })
-  })
+
+  } catch (err) {
+
+    res.json({
+      success: false,
+      message: err.message
+    })
+
+  }
+})
+
+
+router.get('/admin/all', verifyAdmin, async (req, res) => {
+  try {
+
+    const result = await db.query(`
+      SELECT *
+      FROM orders
+      ORDER BY id DESC
+    `)
+
+    res.json({
+      success: true,
+      orders: result.rows
+    })
+
+  } catch (err) {
+
+    res.json({
+      success: false,
+      message: err.message
+    })
+
+  }
 })
 
 router.get('/customer/:phone', (req, res) => {
