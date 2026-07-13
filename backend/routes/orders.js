@@ -29,19 +29,19 @@ router.post('/create', async (req, res) => {
     await db.query(
       `
       INSERT INTO orders (
-        orderId,
-        buyerName,
-        estimatedDeliveryTime,
-        phoneNumber,
-        blockName,
-        roomNumber,
-        boiledEggs,
-        eggBhurji,
-        totalAmount,
-        status,
-        paymentStatus,
-        orderDate
-      )
+  "orderId",
+  "buyerName",
+  "estimatedDeliveryTime",
+  "phoneNumber",
+  "blockName",
+  "roomNumber",
+  "boiledEggs",
+  "eggBhurji",
+  "totalAmount",
+  "status",
+  "paymentStatus",
+  "orderDate"
+)
       VALUES (
         $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12
       )
