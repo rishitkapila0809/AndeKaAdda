@@ -201,42 +201,41 @@ io.emit('ordersUpdated')
   })
 })
 
-router.put(
-  '/:orderId/payment',
-  verifyAdmin,
-  (req, res) => {
+router.put('/:orderId/payment', verifyAdmin, async (req, res) => {
+
+  try {
+
     const { orderId } = req.params
     const { paymentStatus } = req.body
 
-    const query = `
+    await db.query(
+      `
       UPDATE orders
-      SET paymentStatus = ?
-      WHERE orderId = ?
-    `
-
-    db.run(
-      query,
-      [paymentStatus, orderId],
-      function (err) {
-        if (err) {
-          return res.json({
-            success: false,
-            message: err.message,
-          })
-        }
-
-        const io = req.app.get('io')
-
-        io.emit('ordersUpdated')
-
-        res.json({
-          success: true,
-          message: 'Payment updated',
-        })
-      }
+      SET "paymentStatus" = $1
+      WHERE "orderId" = $2
+      `,
+      [paymentStatus, orderId]
     )
+
+    const io = req.app.get('io')
+
+    io.emit('ordersUpdated')
+
+    res.json({
+      success: true,
+      message: 'Payment updated'
+    })
+
+  } catch (err) {
+
+    res.json({
+      success: false,
+      message: err.message
+    })
+
   }
-)
+
+})
 router.put(
   '/:orderId/eta',
   verifyAdmin,
