@@ -308,80 +308,82 @@ router.put(
 
 router.put(
   '/:orderId/cancel',
-  (req, res) => {
-    const { orderId } = req.params
+  async (req, res) => {
 
-    const getQuery = `
-      SELECT orderDate, status
-      FROM orders
-      WHERE orderId = ?
-    `
+    try {
 
-    db.get(
-      getQuery,
-      [orderId],
-      (err, order) => {
-        if (err || !order) {
-          return res.json({
-            success: false,
-            message: 'Order not found'
-          })
-        }
+      const { orderId } = req.params
 
-        if (order.status !== 'Pending') {
-          return res.json({
-            success: false,
-            message:
-              'Order can no longer be cancelled'
-          })
-        }
-
-        const orderTime =
-          new Date(order.orderDate)
-
-        const now = new Date()
-
-        const difference =
-          (now - orderTime) / 1000 / 60
-
-        if (difference > 2) {
-          return res.json({
-            success: false,
-            message:
-              'Time limit for cancellation exceeded'
-          })
-        }
-
-        const updateQuery = `
-          UPDATE orders
-          SET status = 'Cancelled'
-          WHERE orderId = ?
+      const result = await db.query(
         `
+        SELECT "orderDate", status
+        FROM orders
+        WHERE "orderId" = $1
+        `,
+        [orderId]
+      )
 
-        db.run(
-          updateQuery,
-          [orderId],
-          function(err) {
-            if (err) {
-              return res.json({
-                success: false,
-                message: err.message
-              })
-            }
-
-            const io = req.app.get('io')
-
-            io.emit('ordersUpdated')
-
-            res.json({
-              success: true,
-              message:
-                'Order cancelled successfully'
-            })
-          }
-        )
+      if (result.rows.length === 0) {
+        return res.json({
+          success: false,
+          message: 'Order not found'
+        })
       }
-    )
+
+      const order = result.rows[0]
+
+      if (order.status !== 'Pending') {
+        return res.json({
+          success: false,
+          message:
+            'Order can no longer be cancelled'
+        })
+      }
+
+      const orderTime =
+        new Date(order.orderDate)
+
+      const now = new Date()
+
+      const difference =
+        (now - orderTime) / 1000 / 60
+
+      if (difference > 2) {
+        return res.json({
+          success: false,
+          message:
+            'Time limit for cancellation exceeded'
+        })
+      }
+
+      await db.query(
+        `
+        UPDATE orders
+        SET status = 'Cancelled'
+        WHERE "orderId" = $1
+        `,
+        [orderId]
+      )
+
+      const io = req.app.get('io')
+
+      io.emit('ordersUpdated')
+
+      res.json({
+        success: true,
+        message:
+          'Order cancelled successfully'
+      })
+
+    } catch (err) {
+
+      res.json({
+        success: false,
+        message: err.message
+      })
+
+    }
+
   }
 )
 
