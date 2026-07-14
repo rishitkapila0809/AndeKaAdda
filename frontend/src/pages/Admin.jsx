@@ -208,9 +208,8 @@ const statusData =
 if (statusData.success) {
 
   setIsOrderingEnabled(
-    statusData.isOrderingEnabled
-    === 1
-  )
+  statusData.isOrderingEnabled
+)
 }
   
 }
@@ -376,11 +375,9 @@ const response = await fetch(`${apiUrl}/api/orders/${orderId}`, {
             `Bearer ${token}`,
         },
         body: JSON.stringify({
-          isOrderingEnabled:
-            !isOrderingEnabled
-              ? 1
-              : 0
-        }),
+  isOrderingEnabled:
+    !isOrderingEnabled
+}),
       }
     )
 
