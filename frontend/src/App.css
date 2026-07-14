@@ -972,8 +972,8 @@ option {
 }
 
 .price-notice {
-  background: linear-gradient(135deg, #c89a2b, #b88317);
-  border: 2px solid #e7c15a;
+background: #2d4f7c;
+border: 2px solid #6ea8fe;
   border-radius: 14px;
   padding: 14px 20px;
   margin-bottom: 20px;
