@@ -175,31 +175,50 @@ router.put('/:orderId/status', verifyAdmin, async (req, res) => {
 
 })
 
-router.delete('/:orderId', verifyAdmin, (req, res) => {
-  const { orderId } = req.params
+router.delete(
+  '/:orderId',
+  verifyAdmin,
+  async (req, res) => {
 
-  const query = `
-    DELETE FROM orders
-    WHERE orderId = ?
-  `
+    try {
 
-  db.run(query, [orderId], function(err) {
-    if (err) {
-      return res.json({
+      const { orderId } = req.params
+
+      const result = await db.query(
+        `
+        DELETE FROM orders
+        WHERE "orderId" = $1
+        `,
+        [orderId]
+      )
+
+      if (result.rowCount === 0) {
+        return res.json({
+          success: false,
+          message: 'Order not found'
+        })
+      }
+
+      const io = req.app.get('io')
+
+      io.emit('ordersUpdated')
+
+      res.json({
+        success: true,
+        message: 'Order deleted successfully'
+      })
+
+    } catch (err) {
+
+      res.json({
         success: false,
         message: err.message
       })
+
     }
-    const io = req.app.get('io')
 
-io.emit('ordersUpdated')
-
-    res.json({
-      success: true,
-      message: 'Order deleted successfully'
-    })
-  })
-})
+  }
+)
 
 router.put('/:orderId/payment', verifyAdmin, async (req, res) => {
 

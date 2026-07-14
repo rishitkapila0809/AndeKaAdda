@@ -330,28 +330,32 @@ const getRemainingTime = (
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
-  const deleteOrder = async (orderId) => {
-    if (confirm('Are you sure you want to delete this order?')) {
-      try {
-        const token = localStorage.getItem('adminToken')
+const deleteOrder = async (orderId) => {
+  if (confirm('Are you sure you want to delete this order?')) {
+    try {
+      const token = localStorage.getItem('adminToken')
 
-const response = await fetch(`${apiUrl}/api/orders/${orderId}`, {
-  method: 'DELETE',
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-})
-
-        const data = await response.json()
-        if (data.success) {
-          loadOrders()
+      const response = await fetch(
+        `${apiUrl}/api/orders/${orderId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (err) {
-        console.error('Error deleting order:', err)
-        alert('Failed to delete order')
+      )
+
+      const data = await response.json()
+
+      if (data.success) {
+        loadOrders()
       }
+    } catch (err) {
+      console.error('Error deleting order:', err)
+      alert('Failed to delete order')
     }
   }
+}
 
 
   const toggleOrdering =
