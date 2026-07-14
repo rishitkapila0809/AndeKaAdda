@@ -223,26 +223,7 @@ localStorage.setItem(
   return (
     <div className="home-container">
 
-      <div
-  style={{
-    backgroundColor: '#991b1b',
-    color: 'white',
-    padding: '10px 14px',
-    borderRadius: '10px',
-    marginBottom: '15px',
-    textAlign: 'center',
-    border: '1px solid #dc2626',
-    fontSize: '13px',
-    lineHeight: '1.35'
-  }}
->
-  <strong>⚠️ Important Notice</strong>
-  <br />
-  Orders are accepted <strong>only between 6:30 PM and 8:00 PM.</strong>
-  Due to a temporary issue, the website may still allow orders outside these timings. However, orders placed before <strong>6:30 PM</strong> or after <strong>8:00 PM</strong> will not be processed.
-  <br />
-  Thank you for your understanding.
-</div>
+      
       
       {error && <div className="error-message">{error}</div>}
       
@@ -274,8 +255,30 @@ localStorage.setItem(
       You can order only
       between   18:30 PM – 20:00 PM
     </div>
+
+
+    
   </div>
+
+
+
 )}
+
+<div className="price-notice">
+  <div className="price-notice-title">
+    📢 Price Notice
+  </div>
+
+  <div className="price-notice-text">
+    Egg prices are subject to daily market rates. Due to a recent increase in
+    market prices, the price of a boiled egg will be revised from
+    <strong> ₹10 </strong>
+    to
+    <strong> ₹10.25 </strong>
+    per egg <strong>effective tomorrow.</strong><p> Thank you for your understanding
+    and continued support! </p>
+  </div>
+</div>
 
       <div className="products-section">
         <div className="product">

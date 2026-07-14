@@ -970,3 +970,44 @@ option {
   background: var(--bg);
   color: var(--text);
 }
+
+.price-notice {
+  background: linear-gradient(135deg, #c89a2b, #b88317);
+  border: 2px solid #e7c15a;
+  border-radius: 14px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  animation: pulseNotice 2.2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(231, 193, 90, 0.18);
+}
+
+.price-notice-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff8e6;
+  margin-bottom: 6px;
+}
+
+.price-notice-text {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #fff5d8;
+}
+
+@keyframes pulseNotice {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 8px rgba(231, 193, 90, 0.12);
+  }
+
+  50% {
+    transform: scale(1.008);
+    box-shadow: 0 0 16px rgba(231, 193, 90, 0.28);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 8px rgba(231, 193, 90, 0.12);
+  }
+}
