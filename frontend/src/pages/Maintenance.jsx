@@ -12,7 +12,7 @@ function Maintenance() {
       />
 
       <h1 className="maintenance-title">
-  Something <span>Eggciting</span> is Coming!
+  Something <span>Eggciting</span><br /> is Coming!
 </h1>
 
       <p className="maintenance-description">
