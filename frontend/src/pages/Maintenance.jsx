@@ -1,5 +1,5 @@
 import './Maintenance.css'
-import maintenanceImage from '../assets/maintenance.png'
+import maintenanceImage from '../assets/maintenance.PNG'
 
 function Maintenance() {
   return (
