@@ -1,16 +1,11 @@
-import { io } from 'socket.io-client'
+import socket from '../socket'
 import {
   useState,
   useEffect,
   useRef
 } from 'react'
 import AdminLogin from './AdminLogin'
-const socket = io(import.meta.env.VITE_API_URL, {
-  transports: ['websocket'],
-  reconnection: true,
-  reconnectionAttempts: Infinity,
-  reconnectionDelay: 1000
-})
+
 
 
 
@@ -29,6 +24,10 @@ function Admin({ isAdminLoggedIn, onAdminLogin, onAdminLogout, apiUrl }) {
   isOrderingEnabled,
   setIsOrderingEnabled
 ] = useState(true)
+  const [
+  isMaintenanceEnabled,
+  setIsMaintenanceEnabled
+] = useState(false)
   const [orders, setOrders] = useState([])
   const [selectedDate, setSelectedDate] =
   useState(
@@ -210,6 +209,22 @@ if (statusData.success) {
   setIsOrderingEnabled(
   statusData.isOrderingEnabled
 )
+}
+
+const maintenanceResponse =
+  await fetch(
+    `${apiUrl}/api/orders/maintenance-status`
+  )
+
+const maintenanceData =
+  await maintenanceResponse.json()
+
+if (maintenanceData.success) {
+
+  setIsMaintenanceEnabled(
+    maintenanceData.isMaintenanceEnabled
+  )
+
 }
   
 }
@@ -394,6 +409,45 @@ const deleteOrder = async (orderId) => {
   }
 }
 
+const toggleMaintenance =
+  async () => {
+
+    try {
+
+      const token =
+        localStorage.getItem(
+          'adminToken'
+        )
+
+      await fetch(
+        `${apiUrl}/api/orders/maintenance-status`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type':
+              'application/json',
+            Authorization:
+              `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            isMaintenanceEnabled:
+              !isMaintenanceEnabled
+          }),
+        }
+      )
+
+      setIsMaintenanceEnabled(
+        !isMaintenanceEnabled
+      )
+
+    } catch (err) {
+
+      console.log(err)
+
+    }
+
+  }
+
 const filteredOrders = orders.filter(
   order => {
 
@@ -560,6 +614,47 @@ const orderDate =
     isOrderingEnabled
       ? '🟢 Website LIVE'
       : '🔴 Website OFFLINE'
+  }
+</div>
+
+<button
+  onClick={toggleMaintenance}
+  style={{
+    padding: '14px 24px',
+    backgroundColor:
+      isMaintenanceEnabled
+        ? '#dc2626'
+        : '#16a34a',
+    color: 'white',
+    border: 'none',
+    borderRadius: '10px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    marginBottom: '20px'
+  }}
+>
+  {
+    isMaintenanceEnabled
+      ? '🔴 Disable Maintenance'
+      : '🛠️ Enable Maintenance'
+  }
+</button>
+
+<div
+  style={{
+    marginBottom: '25px',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    color:
+      isMaintenanceEnabled
+        ? '#f59e0b'
+        : '#22c55e'
+  }}
+>
+  {
+    isMaintenanceEnabled
+      ? '🛠️ Maintenance Mode ON'
+      : '🟢 Maintenance Mode OFF'
   }
 </div>
       

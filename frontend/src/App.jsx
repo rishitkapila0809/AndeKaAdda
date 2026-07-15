@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation
+} from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Navbar from './components/navbar'
 import Home from './pages/Home'
@@ -8,8 +13,109 @@ import OrderSuccess from './pages/OrderSuccess'
 import CustomerLogin from './pages/CustomerLogin'
 import Sales from './pages/Sales'
 import './App.css'
+import Maintenance from './pages/Maintenance'
+import socket from './socket'
 
 const API_URL = import.meta.env.VITE_API_URL
+
+function AppRoutes({
+  isAdminLoggedIn,
+  handleAdminLogout,
+  setIsAdminLoggedIn,
+  isMaintenanceEnabled
+}) {
+
+  const location = useLocation()
+
+const isAdminPage =
+  location.pathname.startsWith('/admin') ||
+  location.pathname.startsWith('/sales')
+
+  const showMaintenance =
+    isMaintenanceEnabled &&
+    !isAdminPage
+
+    console.log({
+  isMaintenanceEnabled,
+  isAdminPage,
+  showMaintenance
+})
+
+  if (showMaintenance) {
+    return <Maintenance />
+  }
+
+  return (
+    <>
+
+      <Navbar
+        isAdminLoggedIn={isAdminLoggedIn}
+        onAdminLogout={handleAdminLogout}
+      />
+
+      <Routes>
+
+        <Route
+          path="/"
+          element={<Home apiUrl={API_URL} />}
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <Admin
+              isAdminLoggedIn={isAdminLoggedIn}
+              onAdminLogin={setIsAdminLoggedIn}
+              onAdminLogout={handleAdminLogout}
+              apiUrl={API_URL}
+            />
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={<Cart apiUrl={API_URL} />}
+        />
+
+        <Route
+          path="/success"
+          element={<OrderSuccess />}
+        />
+
+        <Route
+          path="/login"
+          element={<CustomerLogin />}
+        />
+
+        <Route
+          path="/maintenance"
+          element={<Maintenance />}
+        />
+
+        <Route
+          path="/sales"
+          element={
+            isAdminLoggedIn
+              ? (
+                <Sales apiUrl={API_URL} />
+              )
+              : (
+                <Admin
+                  isAdminLoggedIn={isAdminLoggedIn}
+                  onAdminLogin={setIsAdminLoggedIn}
+                  onAdminLogout={handleAdminLogout}
+                  apiUrl={API_URL}
+                />
+              )
+          }
+        />
+
+      </Routes>
+
+    </>
+  )
+
+}
 
 
 
@@ -29,6 +135,10 @@ useEffect(() => {
 
 
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false)
+  const [
+  isMaintenanceEnabled,
+  setIsMaintenanceEnabled
+] = useState(false)
 
   useEffect(() => {
     // Check if admin is already logged in (from localStorage)
@@ -37,6 +147,61 @@ useEffect(() => {
       setIsAdminLoggedIn(true)
     }
   }, [])
+
+
+  const loadMaintenance = async () => {
+
+  try {
+
+    const response = await fetch(
+      `${API_URL}/api/orders/maintenance-status`
+    )
+
+    const data = await response.json()
+
+    if (data.success) {
+
+      setIsMaintenanceEnabled(
+        data.isMaintenanceEnabled
+      )
+
+    }
+
+  } catch (err) {
+
+    console.log(err)
+
+  }
+
+}
+
+useEffect(() => {
+
+  loadMaintenance()
+
+  const handleSettingsUpdate = () => {
+
+    loadMaintenance()
+
+  }
+
+  socket.on(
+    'settingsUpdated',
+    handleSettingsUpdate
+  )
+
+  return () => {
+
+    socket.off(
+      'settingsUpdated',
+      handleSettingsUpdate
+    )
+
+  }
+
+}, [])
+
+  
 
   const handleAdminLogout = () => {
     localStorage.removeItem('adminAuth')
@@ -56,43 +221,17 @@ useEffect(() => {
 }
 
   return (
-    <Router>
-      <Navbar isAdminLoggedIn={isAdminLoggedIn} onAdminLogout={handleAdminLogout} />
-      <Routes>
-        <Route path="/" element={<Home apiUrl={API_URL} />} />
-        <Route 
-          path="/admin" 
-          element={<Admin isAdminLoggedIn={isAdminLoggedIn} onAdminLogin={setIsAdminLoggedIn} onAdminLogout={handleAdminLogout} apiUrl={API_URL} />} 
-        />
-        <Route path="/cart" element={<Cart apiUrl={API_URL} />} />
-        <Route path="/success" element={<OrderSuccess />} />
-        <Route path="/login" element={<CustomerLogin />}/>
-        <Route
-  path="/sales"
-  element={
-    isAdminLoggedIn ? (
-      <Sales apiUrl={API_URL} />
-    ) : (
-      <Admin
-        isAdminLoggedIn={
-          isAdminLoggedIn
-        }
-        onAdminLogin={
-          setIsAdminLoggedIn
-        }
-        onAdminLogout={
-          handleAdminLogout
-        }
-        apiUrl={API_URL}
-      />
-    )
-  }
-/>
+  <Router>
 
+    <AppRoutes
+      isAdminLoggedIn={isAdminLoggedIn}
+      handleAdminLogout={handleAdminLogout}
+      setIsAdminLoggedIn={setIsAdminLoggedIn}
+      isMaintenanceEnabled={isMaintenanceEnabled}
+    />
 
-      </Routes>
-    </Router>
-  )
+  </Router>
+)
 }
 
 export default App

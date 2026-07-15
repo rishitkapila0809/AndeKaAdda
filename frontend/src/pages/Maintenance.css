@@ -1,0 +1,100 @@
+
+
+.maintenance-page {
+  width: 100%;
+  min-height: 100vh;
+
+  background: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 40px 20px;
+  box-sizing: border-box;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.maintenance-image {
+  width: 100%;
+  max-width: 580px;
+  height: auto;
+  margin-bottom: 35px;
+  animation: float 4s ease-in-out infinite;
+  
+}
+
+.maintenance-title {
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.2;
+    white-space: nowrap;
+    white-space: nowrap;
+}
+
+.maintenance-title span {
+    color: #f4b400;
+
+    text-shadow:
+        0 0 8px rgba(244,180,0,0.45),
+        0 0 18px rgba(244,180,0,0.25);
+
+    animation: glow 2.5s ease-in-out infinite alternate;
+}
+
+.maintenance-description {
+  margin-top: 28px;
+  font-size: 1.3rem;
+  color: #5f6368;
+  line-height: 1.8;
+}
+
+.maintenance-footer {
+  margin-top: 45px;
+  font-size: 1.15rem;
+  color: #4b5563;
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .maintenance-image {
+    max-width: 95%;
+    margin-bottom: 25px;
+  }
+
+  .maintenance-title {
+    font-size: 2.3rem;
+  }
+
+  .maintenance-description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .maintenance-footer {
+    font-size: 1rem;
+  }
+}
+
+@keyframes glow {
+
+    from {
+        text-shadow:
+            0 0 8px rgba(244,180,0,0.35),
+            0 0 15px rgba(244,180,0,0.20);
+    }
+
+    to {
+        text-shadow:
+            0 0 12px rgba(244,180,0,0.60),
+            0 0 28px rgba(244,180,0,0.35);
+    }
+
+}
+

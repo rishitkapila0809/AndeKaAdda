@@ -3,6 +3,7 @@ import {
   useEffect
 } from 'react'
 import { useNavigate } from 'react-router-dom'
+import socket from '../socket'
 
 function Home({ apiUrl }) {
   const [eggQuantity, setEggQuantity] = useState(2)
@@ -20,6 +21,25 @@ function Home({ apiUrl }) {
   const boiledEggTotal = eggQuantity * 10
   const bhurjiTotal = bhurjiQuantity * 40
   const grandTotal = boiledEggTotal + bhurjiTotal
+
+    const fetchOrderingStatus =
+  async () => {
+
+  const response =
+    await fetch(
+      `${apiUrl}/api/orders/ordering-status`
+    )
+
+  const data =
+    await response.json()
+
+  if (data.success) {
+
+    setIsOrderingEnabled(
+  data.isOrderingEnabled
+)
+  }
+}
 
 
 useEffect(() => {
@@ -60,26 +80,20 @@ useEffect(() => {
     setRoomNumber(savedRoom)
   }
 
-  const fetchOrderingStatus =
-  async () => {
 
-  const response =
-    await fetch(
-      `${apiUrl}/api/orders/ordering-status`
-    )
-
-  const data =
-    await response.json()
-
-  if (data.success) {
-
-    setIsOrderingEnabled(
-  data.isOrderingEnabled
-)
-  }
-}
 
 fetchOrderingStatus()
+
+const handleSettingsUpdate = () => {
+
+  fetchOrderingStatus()
+
+}
+
+socket.on(
+  'settingsUpdated',
+  handleSettingsUpdate
+)
 
 
   let startY = 0
@@ -107,6 +121,15 @@ fetchOrderingStatus()
 
     }
   )
+
+  return () => {
+
+  socket.off(
+    'settingsUpdated',
+    handleSettingsUpdate
+  )
+
+}
 
 
 }, [])
@@ -264,21 +287,6 @@ localStorage.setItem(
 
 )}
 
-<div className="price-notice">
-  <div className="price-notice-title">
-    📢 Price Notice
-  </div>
-
-  <div className="price-notice-text">
-    Egg prices are subject to daily market rates. Due to a recent increase in
-    market prices, the price of a boiled egg will be revised from
-    <strong> ₹10 </strong>
-    to
-    <strong> ₹10.25 </strong>
-    per egg <strong>effective tomorrow.</strong><p> Thank you for your understanding
-    and continued support! </p>
-  </div>
-</div>
 
       <div className="products-section">
         <div className="product">

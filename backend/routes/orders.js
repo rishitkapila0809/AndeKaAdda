@@ -438,6 +438,37 @@ res.json({
   }
 )
 
+router.get(
+  '/maintenance-status',
+  async (req, res) => {
+
+    try {
+
+      const result = await db.query(
+        `
+        SELECT "isMaintenanceEnabled"
+        FROM settings
+        WHERE id = 1
+        `
+      )
+
+      res.json({
+        success: true,
+        isMaintenanceEnabled:
+          result.rows[0].isMaintenanceEnabled
+      })
+
+    } catch {
+
+      res.json({
+        success: false
+      })
+
+    }
+
+  }
+)
+
 router.put(
   '/ordering-status',
   verifyAdmin,
@@ -458,6 +489,10 @@ router.put(
         [isOrderingEnabled]
       )
 
+      const io = req.app.get('io')
+
+io.emit('settingsUpdated')
+
       res.json({
         success: true
       })
@@ -473,5 +508,45 @@ router.put(
   }
 )
 
+
+
+router.put(
+  '/maintenance-status',
+  verifyAdmin,
+  async (req, res) => {
+
+    try {
+
+      const {
+        isMaintenanceEnabled
+      } = req.body
+
+      await db.query(
+        `
+        UPDATE settings
+        SET "isMaintenanceEnabled" = $1
+        WHERE id = 1
+        `,
+        [isMaintenanceEnabled]
+      )
+
+      const io = req.app.get('io')
+
+io.emit('settingsUpdated')
+
+      res.json({
+        success: true
+      })
+
+    } catch {
+
+      res.json({
+        success: false
+      })
+
+    }
+
+  }
+)
 
 module.exports = router
