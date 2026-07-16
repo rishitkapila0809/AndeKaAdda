@@ -15,6 +15,8 @@ import Sales from './pages/Sales'
 import './App.css'
 import Maintenance from './pages/Maintenance'
 import socket from './socket'
+import Checkout from './pages/Checkout'
+import AnnouncementPopup from './components/AnnouncementPopup'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -73,6 +75,11 @@ const isAdminPage =
         />
 
         <Route
+  path="/checkout"
+  element={<Checkout apiUrl={API_URL} />}
+/>
+
+        <Route
           path="/cart"
           element={<Cart apiUrl={API_URL} />}
         />
@@ -124,6 +131,11 @@ function App() {
 const [showSplash, setShowSplash] =
   useState(true)
 
+  const [
+  showAnnouncement,
+  setShowAnnouncement
+] = useState(false)
+
 useEffect(() => {
   const timer = setTimeout(() => {
     setShowSplash(false)
@@ -131,6 +143,34 @@ useEffect(() => {
 
   return () => clearTimeout(timer)
 }, [])
+
+useEffect(() => {
+
+  const version = 'v1'
+
+  const seenVersion =
+    localStorage.getItem(
+      'announcementVersion'
+    )
+
+  if (seenVersion !== version) {
+
+    setShowAnnouncement(true)
+
+  }
+
+}, [])
+
+const closeAnnouncement = () => {
+
+  localStorage.setItem(
+    'announcementVersion',
+    'v1'
+  )
+
+  setShowAnnouncement(false)
+
+}
 
 
 
@@ -221,6 +261,7 @@ useEffect(() => {
 }
 
   return (
+    <>
   <Router>
 
     <AppRoutes
@@ -230,7 +271,16 @@ useEffect(() => {
       isMaintenanceEnabled={isMaintenanceEnabled}
     />
 
-  </Router>
+  {showAnnouncement && (
+  <AnnouncementPopup
+    onClose={closeAnnouncement}
+  />
+)}
+
+</Router>
+
+</>
+
 )
 }
 

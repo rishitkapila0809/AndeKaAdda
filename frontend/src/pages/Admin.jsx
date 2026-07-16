@@ -721,7 +721,7 @@ style={{
                 <div className="items-info">
                   <h4>🛒 Items</h4>
                   {order.boiledEggs > 0 && (
-                    <p>🥚 Boiled Eggs: {order.boiledEggs} × ₹10 = ₹{order.boiledEggs * 10}</p>
+                    <p>🥚 Boiled Eggs: {order.boiledEggs} × ₹11 = ₹{order.boiledEggs * 11}</p>
                   )}
                   {order.eggBhurji > 0 && (
                     <p>🍛 Egg Bhurji: {order.eggBhurji} × ₹40 = ₹{order.eggBhurji * 40}</p>

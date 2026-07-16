@@ -99,7 +99,7 @@ function Sales({ apiUrl }) {
     )
 
   const totalProfit =
-    totalEggs * 2 +
+    totalEggs * 2.75 +
     totalBhurji * 5
 
   return (

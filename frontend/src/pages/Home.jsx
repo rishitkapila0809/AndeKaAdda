@@ -18,9 +18,10 @@ function Home({ apiUrl }) {
   const navigate = useNavigate()
   const [isOrderingEnabled, setIsOrderingEnabled] = useState(true)
 
-  const boiledEggTotal = eggQuantity * 10
+  const boiledEggTotal = eggQuantity * 11
   const bhurjiTotal = bhurjiQuantity * 40
   const grandTotal = boiledEggTotal + bhurjiTotal
+  const totalItems = eggQuantity + bhurjiQuantity
 
     const fetchOrderingStatus =
   async () => {
@@ -134,114 +135,65 @@ socket.on(
 
 }, [])
 
-  const handlePlaceOrder = async () => {
-    if (!buyerName || !phoneNumber || !block || !roomNumber) {
-      alert('❌ Please fill all delivery details')
-      return
-    }
+  const handleContinue = () => {
 
-    if (eggQuantity < 2 && bhurjiQuantity === 0) {
-      alert('❌ Please select a quantity for at least one item')
-      return
-    }
-
-    
-    setError('')
-
-    const phoneRegex = /^[0-9]{10}$/
-const blockRegex = /^[A-Za-z]{1}$/
-const roomRegex = /^[0-9]{3,4}$/
-const nameRegex = /^[A-Za-z ]+$/
-
-if (!nameRegex.test(buyerName.trim())) {
-  alert('Name should contain only letters')
-  return
-}
-
-if (!phoneRegex.test(phoneNumber)) {
-  alert('Enter a valid phone number')
-  return
-}
-
-if (!blockRegex.test(block)) {
-  alert('Enter a Valid Block')
-  return
-}
-
-if (!roomRegex.test(roomNumber)) {
-  alert('Enter a valid room number')
-  return
-}
-
-const room = Number(roomNumber)
-
-if (room < 1 || room > 2000) {
-  alert('Enter a valid room number')
-  return
-}
-setLoading(true)
-
-    try {
-      const response = await fetch(`${apiUrl}/api/orders/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          buyerName,
-          phoneNumber,
-          block,
-          roomNumber,
-          boiledEggs: eggQuantity,
-          eggBhurji: bhurjiQuantity,
-          totalAmount: grandTotal,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-
-  localStorage.setItem(
-    'customerPhone',
-    phoneNumber
-  )
-
-  localStorage.setItem(
-  'customerName',
-  buyerName
-)
-
-localStorage.setItem(
-  'customerBlock',
-  block
-)
-
-localStorage.setItem(
-  'customerRoom',
-  roomNumber
-)
-
-
-
-  setEggQuantity(2)
-  setBhurjiQuantity(0)
-  setBuyerName('')
-  setPhoneNumber('')
-  setBlock('')
-  setRoomNumber('')
-
-  navigate('/success')
-} else {
-        setError('❌ Failed to place order: ' + data.message)
-      }
-    } catch (err) {
-      setError('❌ Connection error: Make sure backend is running on import.meta.env.VITE_API_URL')
-      console.error('Error placing order:', err)
-    } finally {
-      setLoading(false)
-    }
+  if (!buyerName || !phoneNumber || !block || !roomNumber) {
+    alert('❌ Please fill all delivery details')
+    return
   }
+
+  if (eggQuantity < 2 && bhurjiQuantity === 0) {
+    alert('❌ Please select a quantity for at least one item')
+    return
+  }
+
+  const phoneRegex = /^[0-9]{10}$/
+  const blockRegex = /^[A-Za-z]{1}$/
+  const roomRegex = /^[0-9]{3,4}$/
+  const nameRegex = /^[A-Za-z ]+$/
+
+  if (!nameRegex.test(buyerName.trim())) {
+    alert('Name should contain only letters')
+    return
+  }
+
+  if (!phoneRegex.test(phoneNumber)) {
+    alert('Enter a valid phone number')
+    return
+  }
+
+  if (!blockRegex.test(block)) {
+    alert('Enter a valid Block')
+    return
+  }
+
+  if (!roomRegex.test(roomNumber)) {
+    alert('Enter a valid room number')
+    return
+  }
+
+  const room = Number(roomNumber)
+
+  if (room < 1 || room > 2000) {
+    alert('Enter a valid room number')
+    return
+  }
+
+  navigate('/checkout', {
+    state: {
+      buyerName,
+      phoneNumber,
+      block,
+      roomNumber,
+      eggQuantity,
+      bhurjiQuantity,
+      boiledEggTotal,
+      bhurjiTotal,
+      grandTotal
+    }
+  })
+
+}
 
   return (
     <div className="home-container">
@@ -291,7 +243,7 @@ localStorage.setItem(
       <div className="products-section">
         <div className="product">
           <h2>🥚 Boiled Eggs</h2>
-          <p className="price">₹10 per egg</p>
+          <p className="price">₹11 per egg</p>
           <p className="note">Minimum order: 2 eggs</p>
           <select
   value={eggQuantity}
@@ -388,21 +340,7 @@ localStorage.setItem(
         </div>
       </div>
 
-      <div className="order-summary">
-        <h2>Order Summary</h2>
-        <div className="summary-row">
-          <span>Boiled Eggs ({eggQuantity})</span>
-          <span>₹{boiledEggTotal}</span>
-        </div>
-        <div className="summary-row">
-          <span>Egg Bhurji ({bhurjiQuantity})</span>
-          <span>₹{bhurjiTotal}</span>
-        </div>
-        <div className="summary-row grand-total">
-          <span>Grand Total</span>
-          <span>₹{grandTotal}</span>
-        </div>
-      </div>
+      
 
 
 
@@ -423,16 +361,29 @@ localStorage.setItem(
 </div> */}
 
 
-      <button 
-        className="place-order-btn"
-        onClick={handlePlaceOrder}
-        disabled={
-  loading ||
-  !isOrderingEnabled
-}
-      >
-        {loading ? 'Processing...' : 'Place Order'}
-      </button>
+<div className="floating-checkout-bar">
+
+  <div className="floating-left">
+    <div className="floating-eggs">
+  {totalItems} {totalItems === 1 ? 'Item' : 'Items'}
+</div>
+
+    <div className="floating-price">
+      ₹{grandTotal}
+    </div>
+  </div>
+
+  <button
+    className="floating-continue-btn"
+    onClick={handleContinue}
+    disabled={!isOrderingEnabled}
+  >
+    Continue →
+  </button>
+
+</div>
+
+
     </div>
   )
 }
