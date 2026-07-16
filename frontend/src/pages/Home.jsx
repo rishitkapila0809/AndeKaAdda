@@ -4,6 +4,7 @@ import {
 } from 'react'
 import { useNavigate } from 'react-router-dom'
 import socket from '../socket'
+import Footer from '../components/Footer'
 
 function Home({ apiUrl }) {
   const [eggQuantity, setEggQuantity] = useState(2)
@@ -383,6 +384,7 @@ socket.on(
 
 </div>
 
+<Footer />
 
     </div>
   )
