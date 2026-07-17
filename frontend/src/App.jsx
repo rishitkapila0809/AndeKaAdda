@@ -241,6 +241,74 @@ useEffect(() => {
 
 }, [])
 
+
+useEffect(() => {
+
+  let lastActivity = Date.now()
+
+  const updateActivity = () => {
+
+    lastActivity = Date.now()
+
+  }
+
+  const events = [
+    'click',
+    'keydown',
+    'mousemove',
+    'touchstart',
+    'scroll'
+  ]
+
+  events.forEach(event =>
+    window.addEventListener(
+      event,
+      updateActivity
+    )
+  )
+
+  const refreshTime = setTimeout(() => {
+
+    const fiveMinutes =
+      5 * 60 * 1000
+
+    const checkIdle = () => {
+
+      if (
+        Date.now() - lastActivity >= fiveMinutes
+      ) {
+
+        window.location.reload()
+
+      } else {
+
+        setTimeout(
+          checkIdle,
+          60000
+        )
+
+      }
+
+    }
+
+    checkIdle()
+
+  }, 60 * 60 * 1000)
+
+  return () => {
+
+    clearTimeout(refreshTime)
+
+    events.forEach(event =>
+      window.removeEventListener(
+        event,
+        updateActivity
+      )
+    )
+
+  }
+
+}, [])
   
 
   const handleAdminLogout = () => {
