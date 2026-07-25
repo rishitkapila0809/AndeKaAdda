@@ -1,78 +1,58 @@
-import eggMascot from '../assets/egg-announcement.png'
+// import eggMascot from "../assets/egg-announcement.png";
 
-function AnnouncementPopup({ onClose }) {
+export default function AnnouncementPopup({ onClose }) {
+  const handleFeedbackClick = () => {
+    window.open(
+      "https://docs.google.com/forms/d/e/1FAIpQLSfP1ERDIzKSxXnA9gGcCQCwS8ikxAubKNHH_b_Y7CYVcV2u4Q/viewform?usp=header",
+      "_blank"
+    );
+
+    onClose();
+  };
 
   return (
-
     <div className="announcement-overlay">
-
       <div className="announcement-card">
 
-        <div className="announcement-header">
+        <button
+          className="announcement-close"
+          onClick={onClose}
+        >
+          ✕
+        </button>
 
-  <img
-    src={eggMascot}
-    alt="Egg Mascot"
-    className="announcement-mascot"
-  />
+        {/* <img
+          src={eggMascot}
+          alt="Egg Mascot"
+          className="announcement-mascot"
+        /> */}
 
-  <h2>Price Update</h2>
-
-</div>
+        <h2>Help Us Improve AndeKaAdda</h2>
 
         <p>
-          The price of <b>Boiled Eggs</b> has been updated.
+          We're working on eggciting improvements,
+          and we'd love to hear your feedback.
         </p>
 
-        <div className="announcement-price">
-
-          <span className="old-price">
-            ₹10
-          </span>
-
-          →
-
-          <span className="new-price">
-            ₹11
-          </span>
-
-          <span>
-            per egg
-          </span>
-
-        </div>
-
-        <hr />
-
         <p className="announcement-note">
+          Your feedback helps us improve
+          AndeKaAdda and build features
+          that you'll actually love.
 
-           <span style={{ color: 'white', fontWeight: 'bold' }}>
-            Don't worry!
-        </span>
+          <br />
+          <br />
 
-          <br /><br />
-
-          We're bringing
-          <b> subscription plans </b>
-          very soon that will help you
-          enjoy lower egg prices and
-          save more on every order.
-
+          It only takes <b>2 minutes.</b>
         </p>
 
         <button
           className="announcement-btn"
-          onClick={onClose}
+          onClick={handleFeedbackClick}
         >
-          Got it
+          Fill Feedback Form
         </button>
 
       </div>
-
     </div>
-
-  )
-
+  );
 }
-
-export default AnnouncementPopup

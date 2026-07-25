@@ -146,7 +146,7 @@ useEffect(() => {
 
 useEffect(() => {
 
-  const version = 'v1'
+  const version = 'feedbackform-1'
 
   const seenVersion =
     localStorage.getItem(
