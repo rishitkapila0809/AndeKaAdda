@@ -10,6 +10,7 @@ function Navbar({ isAdminLoggedIn, onAdminLogout }) {
 
   const [tapCount, setTapCount] =useState(0)
   const location = useLocation()
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false)
 
 const handleLogoTap = () => {
   const updatedCount = tapCount + 1
@@ -115,21 +116,64 @@ const handleLogoTap = () => {
       </Link>
     </li>
 
-    <li>
-      <Link to="/sales">
-        Sales
-      </Link>
+    <li className="admin-menu-wrapper">
+
+      <button
+        className="admin-menu-btn"
+        onClick={() =>
+          setAdminMenuOpen(
+            !adminMenuOpen
+          )
+        }
+      >
+        ☰
+      </button>
+
+      {adminMenuOpen && (
+        <div className="admin-dropdown">
+
+          <Link
+            to="/sales"
+            onClick={() =>
+              setAdminMenuOpen(false)
+            }
+          >
+            Sales
+          </Link>
+
+          <Link
+            to="/settings"
+            onClick={() =>
+              setAdminMenuOpen(false)
+            }
+          >
+            Settings
+          </Link>
+
+          <button
+            className="admin-dropdown-logout"
+            onClick={() => {
+
+              setAdminMenuOpen(false)
+
+              onAdminLogout()
+
+              navigate('/')
+
+            }}
+          >
+            Logout
+          </button>
+
+        </div>
+      )}
+
     </li>
   </>
 )}
-
 </ul>
 
-      {isAdminLoggedIn && (
-        <button className="logout-btn" onClick={onAdminLogout}>
-          Logout
-        </button>
-      )}
+      
     </nav>
   )
 }

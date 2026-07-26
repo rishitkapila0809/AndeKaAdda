@@ -42,7 +42,7 @@ body {
 .navbar {
   background: #f59e0b;
 
-  padding: 0.05rem 0.8rem !important;
+  padding: 0.3rem 1rem !important;
 min-height: 52px;
 
   display: flex;
@@ -68,15 +68,11 @@ min-height: 52px;
 }
 
 .full-logo {
-  width: 320px;
-
+  width: 220px;
   height: auto;
-
   object-fit: contain;
-
   display: block;
 }
-
 .navbar ul {
   display: flex;
 
@@ -143,18 +139,15 @@ min-height: 52px;
 @media (max-width: 768px) {
 
   .navbar {
-    padding: 0.05rem 0.7rem;
-
-    gap: 0;
-
-    min-height: auto;
+    padding: 0.25rem 0.7rem !important;
+  gap: 0;
+  min-height: 48px;
   }
 
   .full-logo {
-    width: 185px;
-
-    margin-bottom: -18px;
-  }
+  width: 155px;
+  margin-bottom: 0;
+}
 
   .navbar ul {
     gap: 0.45rem;
@@ -546,9 +539,9 @@ min-height: 52px;
 
 /* Admin Panel */
 .admin-container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 2rem;
+ max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem 2rem 2rem;
 }
 
 .admin-container h1 {
@@ -716,6 +709,19 @@ min-height: 52px;
 .delete-btn:hover {
   background: #dc2626;
   transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .admin-container {
+    margin: 0 auto;
+    padding: 1rem 0.8rem 1.5rem;
+  }
+
+  .admin-container h1 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+  }
 }
 
 /* Cart Page */
@@ -1483,4 +1489,220 @@ border: 2px solid #6ea8fe;
     font-size: 10px;
   }
 
+}
+
+/* navbar css */
+
+.admin-menu-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.admin-menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 25px;
+  cursor: pointer;
+  padding: 5px 8px;
+  line-height: 1;
+}
+
+.admin-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+
+  width: 150px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #111827;
+
+  border: 1px solid #334155;
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.4);
+
+  z-index: 10000;
+}
+
+.admin-dropdown a,
+.admin-dropdown button {
+  width: 100%;
+
+  padding: 13px 16px;
+
+  background: none;
+  border: none;
+
+  color: white;
+
+  text-align: left;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.admin-dropdown a:hover,
+.admin-dropdown button:hover {
+  background: #1f2937;
+}
+
+.admin-dropdown-logout {
+  color: #ef4444 !important;
+  border-top: 1px solid #334155 !important;
+} 
+
+
+
+
+
+/* admin smaller card */
+.compact-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: 20px;
+
+  padding-left: 10px;
+  padding-right: 6px;
+  padding-top: 4px;
+}
+
+.compact-order-header > div {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 16px;
+}
+
+.compact-order-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.3;
+}
+
+.compact-order-info {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+
+  padding: 0 8px;
+}
+
+.compact-order-info div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.compact-order-info span {
+  color: #94a3b8;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+.compact-order-info strong {
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+.show-details-btn {
+  width: 100%;
+  padding: 7px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.show-details-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.expanded-order-details {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 600px) {
+
+  .order-card {
+    padding: 14px !important;
+    margin-bottom: 12px;
+  }
+
+  .compact-order-header {
+    margin-bottom: 20px;
+  }
+
+  .compact-order-header h3 {
+    font-size: 16px;
+  }
+
+  .compact-order-header .status-badge {
+    font-size: 10px;
+    padding: 5px 9px;
+  }
+
+  .compact-order-info {
+    margin-bottom: 14px;
+    padding: 0 6px;
+    gap: 16px;
+  }
+
+  .compact-order-info strong {
+    font-size: 13px;
+  }
+
+  .show-details-btn {
+    padding: 7px;
+    font-size: 10px;
+  }
+
+}
+
+.compact-order-header .status-badge {
+  font-size: 11px;
+
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  white-space: nowrap;
+
+  flex-shrink: 0;
 }

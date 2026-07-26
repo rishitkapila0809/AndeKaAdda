@@ -54,6 +54,7 @@ const [editingBhurjiWithMe, setEditingBhurjiWithMe] =
 
 const [eggInput, setEggInput] = useState('')
 const [bhurjiInput, setBhurjiInput] = useState('')
+const [expandedOrders, setExpandedOrders] = useState({})
 
   const latestOrderIdRef =
   useRef(null)
@@ -700,6 +701,15 @@ const saveBhurjiWithMe = async () => {
   setEditingBhurjiWithMe(false)
 }
 
+const toggleOrderDetails = (orderId) => {
+
+  setExpandedOrders(prev => ({
+    ...prev,
+    [orderId]: !prev[orderId]
+  }))
+
+}
+
   return (
     <div className="admin-container">
 
@@ -751,7 +761,7 @@ const saveBhurjiWithMe = async () => {
 )}
 
 
-  <h1>📋 Admin Panel</h1>
+  <h1>Kapila Maharaj Ki Jai!</h1>
 
   <div
     style={{
@@ -780,7 +790,7 @@ const saveBhurjiWithMe = async () => {
     />
   </div>
 
-  <h2
+  <h5
   style={{
     marginBottom: '20px',
     color: '#ffffff'
@@ -792,10 +802,10 @@ const saveBhurjiWithMe = async () => {
     month: 'long',
     year: 'numeric'
   })}
-</h2>
+</h5>
 
 
-  <button
+  {/* <button
   onClick={toggleOrdering}
   style={{
     padding: '14px 24px',
@@ -876,7 +886,7 @@ const saveBhurjiWithMe = async () => {
       : '🟢 Maintenance Mode OFF'
   }
 </div>
-
+ */}
 
 
 {/* 
@@ -1056,237 +1066,421 @@ inventory tracker */}
 
 
 
-      {filteredOrders.length === 0 ? (
+{filteredOrders.length === 0 ? (
+
   <div className="no-orders">
     <p>No orders for this date currently</p>
   </div>
-) : (
-  <div className="orders-list">
-    {filteredOrders.map((order) => (
-            <div
-  key={order.orderId}
-  className={`order-card status-${order.status.toLowerCase()}`}
-style={{
-  backgroundColor:
-    order.status === 'Cancelled'
-      ? '#3a0d0d'
-      : order.status === 'Delivered'
-      ? '#104428'
-      : order.status === 'Preparing'
-      ? '#0d223a'
-      : order.status === 'Ready'
-      ? '#3a2d0d'
-      : order.status === 'Pending'
-      ? '#2a0d3a'
-      : '',
 
-  border:
-    order.status === 'Cancelled'
-      ? '2px solid #ff4444'
-      : order.status === 'Delivered'
-      ? '2px solid #00ff99'
-      : order.status === 'Preparing'
-      ? '2px solid #66ccff'
-      : order.status === 'Ready'
-      ? '2px solid #ffcc66'
-      : order.status === 'Pending'
-      ? '2px solid #cc99ff'
-      : ''
-}}
->
+) : (
+
+  <div className="orders-list">
+
+    {filteredOrders.map((order) => {
+
+      const isExpanded =
+        expandedOrders[order.orderId]
+
+      return (
+
+        <div
+          key={order.orderId}
+          className={`order-card status-${order.status.toLowerCase()}`}
+          style={{
+            backgroundColor:
+              order.status === 'Cancelled'
+                ? '#3a0d0d'
+                : order.status === 'Delivered'
+                ? '#104428'
+                : order.status === 'Preparing'
+                ? '#0d223a'
+                : order.status === 'Ready'
+                ? '#3a2d0d'
+                : order.status === 'Pending'
+                ? '#2a0d3a'
+                : '',
+
+            border:
+              order.status === 'Cancelled'
+                ? '2px solid #ff4444'
+                : order.status === 'Delivered'
+                ? '2px solid #00ff99'
+                : order.status === 'Preparing'
+                ? '2px solid #66ccff'
+                : order.status === 'Ready'
+                ? '2px solid #ffcc66'
+                : order.status === 'Pending'
+                ? '2px solid #cc99ff'
+                : ''
+          }}
+        >
+
+          <div className="compact-order-header">
+
+            <div>
+              <h3>{order.buyerName}</h3>
+
+              <span
+                className={`status-badge ${order.status.toLowerCase()}`}
+              >
+                {order.status === 'Ready'
+                  ? 'Ready for Delivery'
+                  : order.status}
+              </span>
+            </div>
+
+          </div>
+
+
+          <div className="compact-order-info">
+
+            <div>
+              <span>Room</span>
+
+              <strong>
+                {order.blockName}-{order.roomNumber}
+              </strong>
+            </div>
+
+            <div>
+              <span>Order</span>
+
+              <strong>
+
+                {order.boiledEggs > 0 && (
+                  <>
+                    {order.boiledEggs} Boiled Egg
+                    {Number(order.boiledEggs) !== 1
+                      ? 's'
+                      : ''}
+                  </>
+                )}
+
+                {order.boiledEggs > 0 &&
+                  order.eggBhurji > 0 &&
+                  ' + '}
+
+                {order.eggBhurji > 0 && (
+                  <>
+                    {order.eggBhurji} Egg Bhurji
+                  </>
+                )}
+
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <button
+            className="show-details-btn"
+            onClick={() =>
+              toggleOrderDetails(order.orderId)
+            }
+          >
+            {isExpanded
+              ? 'Hide Details ▲'
+              : 'Show Details ▼'}
+          </button>
+
+
+          {isExpanded && (
+
+            <div className="expanded-order-details">
 
               <div className="order-header">
                 <h3>Order {order.orderId}</h3>
-                <span className={`status-badge ${order.status.toLowerCase()}`}>
-                  {order.status}
-                </span>
               </div>
+
 
               <div className="order-content">
+
                 <div className="buyer-info">
+
                   <h4>👤 Buyer Details</h4>
-                  <p><strong>Name:</strong> {order.buyerName}</p>
-                  <p><strong>Phone:</strong> {order.phoneNumber}</p>
-                </div>
-
-                <div className="delivery-info">
-                  <h4>📍 Delivery Location</h4>
-                  <p><strong>Block:</strong> {order.blockName}</p>
-                  <p><strong>Room:</strong> {order.roomNumber}</p>
-                </div>
-
-                <div className="items-info">
-                  <h4>🛒 Items</h4>
-                  {order.boiledEggs > 0 && (
-                    <p>🥚 Boiled Eggs: {order.boiledEggs} × ₹11 = ₹{order.boiledEggs * 11}</p>
-                  )}
-                  {order.eggBhurji > 0 && (
-                    <p>🍛 Egg Bhurji: {order.eggBhurji} × ₹40 = ₹{order.eggBhurji * 40}</p>
-                  )}
-                </div>
-
-                <div className="amount-info">
-                  <p><strong>Total Amount:</strong> ₹{order.totalAmount}</p>
-                  {order.status === 'Cancelled' ? (
-  <p
-    style={{
-      color: '#ff4444',
-      fontWeight: 'bold'
-    }}
-  >
-    ❌ Order Cancelled
-  </p>
-) : order.status === 'Delivered' ? (
-  <p
-    style={{
-      color: '#00ff99',
-      fontWeight: 'bold'
-    }}
-  >
-    ✅ Delivered
-  </p>
-) : getRemainingTime(
-    order.estimatedDeliveryTime
-  ) ? (
-  <p
-    style={{
-      color: '#66ccff',
-      fontWeight: 'bold'
-    }}
-  >
-    ⏳ ETA:
-    {' '}
-    {
-      getRemainingTime(
-        order.estimatedDeliveryTime
-      )
-    }
-  </p>
-) : (
-  <p
-    style={{
-      color: 'orange',
-      fontWeight: 'bold'
-    }}
-  >
-    ⏳ Arriving shortly
-  </p>
-)}
 
                   <p>
-  <strong>Payment:</strong>{' '}
-  <span
-    style={{
-      color:
-        order.paymentStatus === 'Paid'
-          ? '#00ff99'
-          : '#ff6666',
-    }}
-  >
-    {order.paymentStatus}
-  </span>
-</p>
-                  <p className="order-time">
-  Ordered:{' '}
-  {
-    new Date(order.orderDate)
-      .toLocaleString()
-  }
-</p>
+                    <strong>Name:</strong>{' '}
+                    {order.buyerName}
+                  </p>
+
+                  <p>
+                    <strong>Phone:</strong>{' '}
+                    {order.phoneNumber}
+                  </p>
+
                 </div>
+
+
+                <div className="delivery-info">
+
+                  <h4>📍 Delivery Location</h4>
+
+                  <p>
+                    <strong>Block:</strong>{' '}
+                    {order.blockName}
+                  </p>
+
+                  <p>
+                    <strong>Room:</strong>{' '}
+                    {order.roomNumber}
+                  </p>
+
+                </div>
+
+
+                <div className="items-info">
+
+                  <h4>🛒 Items</h4>
+
+                  {order.boiledEggs > 0 && (
+                    <p>
+                      🥚 Boiled Eggs: {order.boiledEggs}
+                      {' × ₹11 = ₹'}
+                      {order.boiledEggs * 11}
+                    </p>
+                  )}
+
+                  {order.eggBhurji > 0 && (
+                    <p>
+                      🍛 Egg Bhurji: {order.eggBhurji}
+                      {' × ₹40 = ₹'}
+                      {order.eggBhurji * 40}
+                    </p>
+                  )}
+
+                </div>
+
+
+                <div className="amount-info">
+
+                  <p>
+                    <strong>Total Amount:</strong>{' '}
+                    ₹{order.totalAmount}
+                  </p>
+
+
+                  {order.status === 'Cancelled' ? (
+
+                    <p
+                      style={{
+                        color: '#ff4444',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      ❌ Order Cancelled
+                    </p>
+
+                  ) : order.status === 'Delivered' ? (
+
+                    <p
+                      style={{
+                        color: '#00ff99',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      ✅ Delivered
+                    </p>
+
+                  ) : getRemainingTime(
+                    order.estimatedDeliveryTime
+                  ) ? (
+
+                    <p
+                      style={{
+                        color: '#66ccff',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      ⏳ ETA:{' '}
+                      {getRemainingTime(
+                        order.estimatedDeliveryTime
+                      )}
+                    </p>
+
+                  ) : (
+
+                    <p
+                      style={{
+                        color: 'orange',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      ⏳ Arriving shortly
+                    </p>
+
+                  )}
+
+
+                  <p>
+
+                    <strong>Payment:</strong>{' '}
+
+                    <span
+                      style={{
+                        color:
+                          order.paymentStatus === 'Paid'
+                            ? '#00ff99'
+                            : '#ff6666'
+                      }}
+                    >
+                      {order.paymentStatus}
+                    </span>
+
+                  </p>
+
+
+                  <p className="order-time">
+
+                    Ordered:{' '}
+
+                    {new Date(
+                      order.orderDate
+                    ).toLocaleString()}
+
+                  </p>
+
+                </div>
+
               </div>
 
+
               <div className="order-actions">
-                <select 
+
+                <select
                   value={order.status}
-                  onChange={(e) => updateOrderStatus(order.orderId, e.target.value)}
+                  onChange={(e) =>
+                    updateOrderStatus(
+                      order.orderId,
+                      e.target.value
+                    )
+                  }
                   className="status-select"
                   disabled={loading}
                 >
-                  <option value="Pending">Pending</option>
-                  <option value="Preparing">Preparing</option>
-                  <option value="Ready">Ready for Delivery</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Cancelled">Cancelled</option>
+
+                  <option value="Pending">
+                    Pending
+                  </option>
+
+                  <option value="Preparing">
+                    Preparing
+                  </option>
+
+                  <option value="Ready">
+                    Ready for Delivery
+                  </option>
+
+                  <option value="Delivered">
+                    Delivered
+                  </option>
+
+                  <option value="Cancelled">
+                    Cancelled
+                  </option>
 
                 </select>
-                <button 
+
+
+                <button
                   className="delete-btn"
-                  onClick={() => deleteOrder(order.orderId)}
+                  onClick={() =>
+                    deleteOrder(order.orderId)
+                  }
                   disabled={loading}
                 >
                   Delete
                 </button>
-               <button
-  onClick={() =>
-    updatePaymentStatus(
-      order.orderId,
-      order.paymentStatus === 'Paid'
-        ? 'Pending'
-        : 'Paid'
-    )
-  }
-  style={{
-    padding: '8px 12px',
-    fontSize: '13px',
-    fontWeight: '600',
-    border: 'none',
-    borderRadius: '8px',
-    background:
-      order.paymentStatus === 'Paid'
-        ? '#ef4444'
-        : '#10b981',
-    color: 'white',
-    cursor: 'pointer'
-  }}
->
-  {
-    order.paymentStatus === 'Paid'
-      ? 'Mark Unpaid'
-      : 'Mark Paid'
-  }
-</button>
 
-<button
-  onClick={() =>
-    updateETA(order.orderId, 5)
-  }
-  style={{
-    padding: '8px 12px',
-    fontSize: '13px',
-    fontWeight: '600',
-    border: '1px solid #e5e7eb',
-    borderRadius: '8px',
-    background: '#ffffff',
-    color: '#111827',
-    cursor: 'pointer'
-  }}
->
-  +5 Min
-</button>
 
-<button
-  onClick={() =>
-    updateETA(order.orderId, -5)
-  }
-  style={{
-    padding: '8px 12px',
-    fontSize: '13px',
-    fontWeight: '600',
-    border: '1px solid #e5e7eb',
-    borderRadius: '8px',
-    background: '#ffffff',
-    color: '#111827',
-    cursor: 'pointer'
-  }}
->
-  -5 Min
-</button>
+                <button
+                  onClick={() =>
+                    updatePaymentStatus(
+                      order.orderId,
+                      order.paymentStatus === 'Paid'
+                        ? 'Pending'
+                        : 'Paid'
+                    )
+                  }
+                  style={{
+                    padding: '8px 12px',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    border: 'none',
+                    borderRadius: '8px',
+                    background:
+                      order.paymentStatus === 'Paid'
+                        ? '#ef4444'
+                        : '#10b981',
+                    color: 'white',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {order.paymentStatus === 'Paid'
+                    ? 'Mark Unpaid'
+                    : 'Mark Paid'}
+                </button>
+
+
+                <button
+                  onClick={() =>
+                    updateETA(
+                      order.orderId,
+                      5
+                    )
+                  }
+                  style={{
+                    padding: '8px 12px',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    background: '#ffffff',
+                    color: '#111827',
+                    cursor: 'pointer'
+                  }}
+                >
+                  +5 Min
+                </button>
+
+
+                <button
+                  onClick={() =>
+                    updateETA(
+                      order.orderId,
+                      -5
+                    )
+                  }
+                  style={{
+                    padding: '8px 12px',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    background: '#ffffff',
+                    color: '#111827',
+                    cursor: 'pointer'
+                  }}
+                >
+                  -5 Min
+                </button>
+
               </div>
+
             </div>
-          ))}
+
+          )}
+
         </div>
-      )}
+
+      )
+
+    })}
+
+  </div>
+
+)}
     </div>
   )
 }

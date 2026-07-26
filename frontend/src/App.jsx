@@ -17,6 +17,7 @@ import Maintenance from './pages/Maintenance'
 import socket from './socket'
 import Checkout from './pages/Checkout'
 import AnnouncementPopup from './components/AnnouncementPopup'
+import Settings from './pages/Settings'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -31,7 +32,8 @@ function AppRoutes({
 
 const isAdminPage =
   location.pathname.startsWith('/admin') ||
-  location.pathname.startsWith('/sales')
+  location.pathname.startsWith('/sales') ||
+  location.pathname.startsWith('/settings')
 
   const showMaintenance =
     isMaintenanceEnabled &&
@@ -117,7 +119,27 @@ const isAdminPage =
           }
         />
 
+              <Route
+  path="/settings"
+  element={
+    isAdminLoggedIn
+      ? (
+        <Settings apiUrl={API_URL} />
+      )
+      : (
+        <Admin
+          isAdminLoggedIn={isAdminLoggedIn}
+          onAdminLogin={setIsAdminLoggedIn}
+          onAdminLogout={handleAdminLogout}
+          apiUrl={API_URL}
+        />
+      )
+  }
+/>
+
       </Routes>
+
+
 
     </>
   )
