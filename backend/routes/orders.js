@@ -141,23 +141,182 @@ router.get('/customer/:phone', async (req, res) => {
 
 router.put('/:orderId/status', verifyAdmin, async (req, res) => {
 
+  const client = await db.connect()
+
   try {
 
     const { orderId } = req.params
     const { status } = req.body
 
-    await db.query(
+    const allowedStatuses = [
+      'Pending',
+      'Preparing',
+      'Ready',
+      'Delivered',
+      'Cancelled'
+    ]
+
+    if (!allowedStatuses.includes(status)) {
+
+      return res.json({
+        success: false,
+        message: 'Invalid order status'
+      })
+
+    }
+
+    await client.query('BEGIN')
+
+    const result = await client.query(
+      `
+      SELECT
+        status,
+        "boiledEggs",
+        "eggBhurji"
+      FROM orders
+      WHERE "orderId" = $1
+      FOR UPDATE
+      `,
+      [orderId]
+    )
+
+    if (result.rows.length === 0) {
+
+      await client.query('ROLLBACK')
+
+      return res.json({
+        success: false,
+        message: 'Order not found'
+      })
+
+    }
+
+    const order = result.rows[0]
+
+    const oldStatus = order.status
+
+    const boiledEggs =
+      Number(order.boiledEggs || 0)
+
+    const eggBhurji =
+      Number(order.eggBhurji || 0)
+
+    const wasDelivered =
+      oldStatus === 'Delivered'
+
+    const isNowDelivered =
+      status === 'Delivered'
+
+
+    if (!wasDelivered && isNowDelivered) {
+
+      const settingsResult =
+        await client.query(
+          `
+          SELECT
+            "eggsWithMe",
+            "bhurjiWithMe"
+          FROM settings
+          WHERE id = 1
+          FOR UPDATE
+          `
+        )
+
+      const settings =
+        settingsResult.rows[0]
+
+      if (
+        Number(settings.eggsWithMe) <
+        boiledEggs
+      ) {
+
+        await client.query('ROLLBACK')
+
+        return res.json({
+          success: false,
+          message:
+            `You only have ${settings.eggsWithMe} boiled eggs with you.`
+        })
+
+      }
+
+      if (
+        Number(settings.bhurjiWithMe) <
+        eggBhurji
+      ) {
+
+        await client.query('ROLLBACK')
+
+        return res.json({
+          success: false,
+          message:
+            `You only have ${settings.bhurjiWithMe} Egg Bhurji with you.`
+        })
+
+      }
+
+      await client.query(
+        `
+        UPDATE settings
+        SET
+          "eggsWithMe" =
+            "eggsWithMe" - $1,
+
+          "bhurjiWithMe" =
+            "bhurjiWithMe" - $2
+
+        WHERE id = 1
+        `,
+        [
+          boiledEggs,
+          eggBhurji
+        ]
+      )
+
+    }
+
+
+    if (wasDelivered && !isNowDelivered) {
+
+      await client.query(
+        `
+        UPDATE settings
+        SET
+          "eggsWithMe" =
+            "eggsWithMe" + $1,
+
+          "bhurjiWithMe" =
+            "bhurjiWithMe" + $2
+
+        WHERE id = 1
+        `,
+        [
+          boiledEggs,
+          eggBhurji
+        ]
+      )
+
+    }
+
+
+    await client.query(
       `
       UPDATE orders
       SET "status" = $1
       WHERE "orderId" = $2
       `,
-      [status, orderId]
+      [
+        status,
+        orderId
+      ]
     )
+
+    await client.query('COMMIT')
 
     const io = req.app.get('io')
 
     io.emit('ordersUpdated')
+    io.emit('settingsUpdated')
 
     res.json({
       success: true,
@@ -166,10 +325,16 @@ router.put('/:orderId/status', verifyAdmin, async (req, res) => {
 
   } catch (err) {
 
+    await client.query('ROLLBACK')
+
     res.json({
       success: false,
       message: err.message
     })
+
+  } finally {
+
+    client.release()
 
   }
 
@@ -548,5 +713,105 @@ io.emit('settingsUpdated')
 
   }
 )
+router.get(
+  '/delivery-inventory',
+  verifyAdmin,
+  async (req, res) => {
+
+    try {
+
+      const result = await db.query(
+        `
+        SELECT
+          "eggsWithMe",
+          "bhurjiWithMe"
+        FROM settings
+        WHERE id = 1
+        `
+      )
+
+      res.json({
+        success: true,
+        eggsWithMe:
+          result.rows[0].eggsWithMe,
+        bhurjiWithMe:
+          result.rows[0].bhurjiWithMe
+      })
+
+    } catch (err) {
+
+      res.json({
+        success: false,
+        message: err.message
+      })
+
+    }
+
+  }
+)
+
+router.put(
+  '/delivery-inventory',
+  verifyAdmin,
+  async (req, res) => {
+
+    try {
+
+      const {
+        eggsWithMe,
+        bhurjiWithMe
+      } = req.body
+
+      const eggs =
+        Number(eggsWithMe)
+
+      const bhurji =
+        Number(bhurjiWithMe)
+
+      if (
+        !Number.isInteger(eggs) ||
+        eggs < 0 ||
+        !Number.isInteger(bhurji) ||
+        bhurji < 0
+      ) {
+
+        return res.json({
+          success: false,
+          message: 'Invalid inventory'
+        })
+
+      }
+
+      await db.query(
+        `
+        UPDATE settings
+        SET
+          "eggsWithMe" = $1,
+          "bhurjiWithMe" = $2
+        WHERE id = 1
+        `,
+        [eggs, bhurji]
+      )
+
+      const io = req.app.get('io')
+
+      io.emit('settingsUpdated')
+
+      res.json({
+        success: true
+      })
+
+    } catch (err) {
+
+      res.json({
+        success: false,
+        message: err.message
+      })
+
+    }
+
+  }
+)
+
 
 module.exports = router

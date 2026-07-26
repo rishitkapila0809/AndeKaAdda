@@ -1346,3 +1346,141 @@ border: 2px solid #6ea8fe;
 .footer-modal-content::-webkit-scrollbar-thumb:hover{
   background:#64748b;
 }
+
+.delivery-tracker {
+  width: 100%;
+  max-width: 700px;
+  margin: 18px auto 24px;
+  padding: 14px;
+  background: #111827;
+  border: 1px solid #334155;
+  border-radius: 16px;
+}
+
+.tracker-header,
+.tracker-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.tracker-header {
+  padding-bottom: 9px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tracker-row {
+  min-height: 48px;
+  padding: 7px 0;
+  border-top: 1px solid #263244;
+  color: white;
+}
+
+.tracker-label {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.tracker-with-me {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.tracker-row strong {
+  font-size: 18px;
+}
+
+.tracker-edit-btn {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #f59e0b;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tracker-edit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.tracker-edit input {
+  width: 52px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.tracker-edit button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 5px;
+  background: #f59e0b;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tracker-message {
+  margin: 0 0 5px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tracker-short {
+  color: #ef4444;
+}
+
+.tracker-extra {
+  color: #22c55e;
+}
+
+.tracker-exact {
+  color: #94a3b8;
+}
+
+@media (max-width: 600px) {
+
+  .delivery-tracker {
+    margin: 14px 0 18px;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .tracker-header,
+  .tracker-row {
+    grid-template-columns: 1.25fr .9fr .9fr .9fr;
+    gap: 3px;
+  }
+
+  .tracker-header {
+    font-size: 9px;
+  }
+
+  .tracker-label {
+    font-size: 11px;
+  }
+
+  .tracker-row strong {
+    font-size: 16px;
+  }
+
+  .tracker-message {
+    font-size: 10px;
+  }
+
+}

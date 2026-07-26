@@ -43,6 +43,18 @@ function Admin({ isAdminLoggedIn, onAdminLogin, onAdminLogout, apiUrl }) {
   useState(null)
   const [, forceUpdate] = useState(0)
 
+  const [eggsWithMe, setEggsWithMe] = useState(0)
+const [bhurjiWithMe, setBhurjiWithMe] = useState(0)
+
+const [editingEggsWithMe, setEditingEggsWithMe] =
+  useState(false)
+
+const [editingBhurjiWithMe, setEditingBhurjiWithMe] =
+  useState(false)
+
+const [eggInput, setEggInput] = useState('')
+const [bhurjiInput, setBhurjiInput] = useState('')
+
   const latestOrderIdRef =
   useRef(null)
 
@@ -481,6 +493,213 @@ const orderDate =
     return <AdminLogin onAdminLogin={onAdminLogin} />
   }
 
+  const loadDeliveryInventory = async () => {
+
+  try {
+
+    const token =
+      localStorage.getItem('adminToken')
+
+    const response = await fetch(
+      `${apiUrl}/api/orders/delivery-inventory`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    const data = await response.json()
+
+    if (data.success) {
+
+      setEggsWithMe(
+        Number(data.eggsWithMe || 0)
+      )
+
+      setBhurjiWithMe(
+        Number(data.bhurjiWithMe || 0)
+      )
+
+    }
+
+  } catch (err) {
+
+    console.log(err)
+
+  }
+
+}
+
+
+useEffect(() => {
+
+  if (isAdminLoggedIn) {
+    loadDeliveryInventory()
+  }
+
+}, [isAdminLoggedIn])
+
+
+useEffect(() => {
+
+  const handleInventoryUpdate = () => {
+    loadDeliveryInventory()
+  }
+
+  socket.on(
+    'settingsUpdated',
+    handleInventoryUpdate
+  )
+
+  return () => {
+
+    socket.off(
+      'settingsUpdated',
+      handleInventoryUpdate
+    )
+
+  }
+
+}, [isAdminLoggedIn])
+
+const pendingStatuses = [
+  'Pending',
+  'Preparing',
+  'Ready'
+]
+
+const pendingBoiledEggs = filteredOrders
+  .filter(order =>
+    pendingStatuses.includes(order.status)
+  )
+  .reduce(
+    (total, order) =>
+      total + Number(order.boiledEggs || 0),
+    0
+  )
+
+const deliveredBoiledEggs = filteredOrders
+  .filter(order =>
+    order.status === 'Delivered'
+  )
+  .reduce(
+    (total, order) =>
+      total + Number(order.boiledEggs || 0),
+    0
+  )
+
+const pendingBhurji = filteredOrders
+  .filter(order =>
+    pendingStatuses.includes(order.status)
+  )
+  .reduce(
+    (total, order) =>
+      total + Number(order.eggBhurji || 0),
+    0
+  )
+
+const deliveredBhurji = filteredOrders
+  .filter(order =>
+    order.status === 'Delivered'
+  )
+  .reduce(
+    (total, order) =>
+      total + Number(order.eggBhurji || 0),
+    0
+  )
+
+const boiledEggDifference =
+  eggsWithMe - pendingBoiledEggs
+
+const bhurjiDifference =
+  bhurjiWithMe - pendingBhurji
+
+  const saveDeliveryInventory = async (
+  newEggsWithMe,
+  newBhurjiWithMe
+) => {
+
+  try {
+
+    const token =
+      localStorage.getItem('adminToken')
+
+    const response = await fetch(
+      `${apiUrl}/api/orders/delivery-inventory`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          eggsWithMe: Number(newEggsWithMe),
+          bhurjiWithMe: Number(newBhurjiWithMe)
+        })
+      }
+    )
+
+    const data = await response.json()
+
+    if (!data.success) {
+      alert(data.message || 'Failed to update inventory')
+      return
+    }
+
+    setEggsWithMe(Number(newEggsWithMe))
+    setBhurjiWithMe(Number(newBhurjiWithMe))
+
+  } catch (err) {
+
+    console.log(err)
+    alert('Failed to update inventory')
+
+  }
+
+}
+
+const saveEggsWithMe = async () => {
+
+  const value = Number(eggInput)
+
+  if (
+    !Number.isInteger(value) ||
+    value < 0
+  ) {
+    alert('Enter a valid number of eggs')
+    return
+  }
+
+  await saveDeliveryInventory(
+    value,
+    bhurjiWithMe
+  )
+
+  setEditingEggsWithMe(false)
+}
+
+
+const saveBhurjiWithMe = async () => {
+
+  const value = Number(bhurjiInput)
+
+  if (
+    !Number.isInteger(value) ||
+    value < 0
+  ) {
+    alert('Enter a valid Bhurji quantity')
+    return
+  }
+
+  await saveDeliveryInventory(
+    eggsWithMe,
+    value
+  )
+
+  setEditingBhurjiWithMe(false)
+}
+
   return (
     <div className="admin-container">
 
@@ -657,7 +876,185 @@ const orderDate =
       : '🟢 Maintenance Mode OFF'
   }
 </div>
-      
+
+
+
+{/* 
+inventory tracker */}
+
+<div className="delivery-tracker">
+
+  <div className="tracker-header">
+    <span></span>
+    <span>With Me</span>
+    <span>Pending</span>
+    <span>Delivered</span>
+  </div>
+
+
+  <div className="tracker-row">
+
+    <div className="tracker-label">
+      Boiled Eggs
+    </div>
+
+    <div className="tracker-with-me">
+
+      {editingEggsWithMe ? (
+        <div className="tracker-edit">
+
+          <input
+            type="number"
+            min="0"
+            value={eggInput}
+            onChange={(e) =>
+              setEggInput(e.target.value)
+            }
+          />
+
+          <button
+            onClick={saveEggsWithMe}
+          >
+            Save
+          </button>
+
+        </div>
+      ) : (
+        <>
+          <strong>{eggsWithMe}</strong>
+
+          <button
+            className="tracker-edit-btn"
+            onClick={() => {
+              setEggInput(
+                String(eggsWithMe)
+              )
+              setEditingEggsWithMe(true)
+            }}
+          >
+            Edit
+          </button>
+        </>
+      )}
+
+    </div>
+
+    <strong>
+      {pendingBoiledEggs}
+    </strong>
+
+    <strong>
+      {deliveredBoiledEggs}
+    </strong>
+
+  </div>
+
+
+  <div
+    className={
+      boiledEggDifference < 0
+        ? 'tracker-message tracker-short'
+        : boiledEggDifference > 0
+        ? 'tracker-message tracker-extra'
+        : 'tracker-message tracker-exact'
+    }
+  >
+
+    {boiledEggDifference < 0
+      ? `You need ${Math.abs(
+          boiledEggDifference
+        )} extra eggs`
+      : boiledEggDifference > 0
+      ? `You have ${boiledEggDifference} extra eggs`
+      : 'Exact quantity available'}
+
+  </div>
+
+
+  <div className="tracker-row">
+
+    <div className="tracker-label">
+      Egg Bhurji
+    </div>
+
+    <div className="tracker-with-me">
+
+      {editingBhurjiWithMe ? (
+        <div className="tracker-edit">
+
+          <input
+            type="number"
+            min="0"
+            value={bhurjiInput}
+            onChange={(e) =>
+              setBhurjiInput(e.target.value)
+            }
+          />
+
+          <button
+            onClick={saveBhurjiWithMe}
+          >
+            Save
+          </button>
+
+        </div>
+      ) : (
+        <>
+          <strong>{bhurjiWithMe}</strong>
+
+          <button
+            className="tracker-edit-btn"
+            onClick={() => {
+              setBhurjiInput(
+                String(bhurjiWithMe)
+              )
+              setEditingBhurjiWithMe(true)
+            }}
+          >
+            Edit
+          </button>
+        </>
+      )}
+
+    </div>
+
+    <strong>
+      {pendingBhurji}
+    </strong>
+
+    <strong>
+      {deliveredBhurji}
+    </strong>
+
+  </div>
+
+
+  <div
+    className={
+      bhurjiDifference < 0
+        ? 'tracker-message tracker-short'
+        : bhurjiDifference > 0
+        ? 'tracker-message tracker-extra'
+        : 'tracker-message tracker-exact'
+    }
+  >
+
+    {bhurjiDifference < 0
+      ? `You need ${Math.abs(
+          bhurjiDifference
+        )} extra Bhurji`
+      : bhurjiDifference > 0
+      ? `You have ${bhurjiDifference} extra Bhurji`
+      : 'Exact quantity available'}
+
+  </div>
+
+</div>
+
+
+
+
+
 
       {filteredOrders.length === 0 ? (
   <div className="no-orders">
