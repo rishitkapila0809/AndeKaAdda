@@ -171,6 +171,16 @@ min-height: 52px;
 
     font-size: 0.8rem;
   }
+
+  .admin-menu-wrapper {
+  position: absolute;
+  right: 14px;
+}
+
+.admin-menu-btn {
+  padding: 6px;
+  font-size: 22px;
+}
 }
 
 /* Admin Login */
