@@ -56,26 +56,11 @@ const [error, setError] = useState('')
     if (data.success) {
 
       localStorage.setItem(
-        'customerPhone',
-        phoneNumber
-      )
+  'customerPhone',
+  phoneNumber
+)
 
-      localStorage.setItem(
-        'customerName',
-        buyerName
-      )
-
-      localStorage.setItem(
-        'customerBlock',
-        block
-      )
-
-      localStorage.setItem(
-        'customerRoom',
-        roomNumber
-      )
-
-      navigate('/success')
+navigate('/success')
 
     } else {
 

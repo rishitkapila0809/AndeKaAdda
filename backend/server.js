@@ -4,6 +4,7 @@ const express = require('express')
 const orderRoutes = require('./routes/orders')
 const cors = require('cors')
 const adminRoutes = require('./routes/admin')
+const customerRoutes = require('./routes/customers')
 
 
 
@@ -31,6 +32,7 @@ app.use(cors())
 app.use(express.json())
 app.use('/api/orders', orderRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/customers', customerRoutes)
 
 app.get('/', (req, res) => {
   res.json({

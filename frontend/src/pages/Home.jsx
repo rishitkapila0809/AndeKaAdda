@@ -46,42 +46,57 @@ function Home({ apiUrl }) {
 
 useEffect(() => {
 
+const loadCustomerProfile = async () => {
+
   const savedPhone =
     localStorage.getItem(
       'customerPhone'
     )
 
-  const savedName =
-    localStorage.getItem(
-      'customerName'
+  if (!savedPhone) {
+    return
+  }
+
+  try {
+
+    const response = await fetch(
+      `${apiUrl}/api/customers/${savedPhone}`
     )
 
-  const savedBlock =
-    localStorage.getItem(
-      'customerBlock'
+    const data = await response.json()
+
+    if (data.success) {
+
+      setBuyerName(
+        data.customer.name || ''
+      )
+
+      setPhoneNumber(
+        data.customer.phoneNumber || ''
+      )
+
+      setBlock(
+        data.customer.blockName || ''
+      )
+
+      setRoomNumber(
+        data.customer.roomNumber || ''
+      )
+
+    }
+
+  } catch (err) {
+
+    console.log(
+      'Unable to load customer profile',
+      err
     )
 
-  const savedRoom =
-    localStorage.getItem(
-      'customerRoom'
-    )
-
-  if (savedPhone) {
-    setPhoneNumber(savedPhone)
   }
 
-  if (savedName) {
-    setBuyerName(savedName)
-  }
+}
 
-  if (savedBlock) {
-    setBlock(savedBlock)
-  }
-
-  if (savedRoom) {
-    setRoomNumber(savedRoom)
-  }
-
+loadCustomerProfile()
 
 
 fetchOrderingStatus()

@@ -1,94 +1,158 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import {
+  useNavigate,
+  useLocation
+} from 'react-router-dom'
 
-function CustomerLogin() {
+function CustomerLogin({
+  apiUrl,
+  showNotification
+}) {
 
   const [phoneNumber, setPhoneNumber] =
     useState('')
 
-  const navigate = useNavigate()
+  const [loading, setLoading] =
+    useState(false)
 
-  const handleLogin = () => {
+  const [error, setError] =
+    useState('')
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const redirectTo =
+    location.state?.redirectTo || '/'
+
+  const handleLogin = async () => {
 
     const phoneRegex = /^[0-9]{10}$/
 
     if (!phoneRegex.test(phoneNumber)) {
-      alert('Enter valid phone number')
+      setError(
+        'Enter a valid 10-digit phone number'
+      )
       return
     }
 
-    localStorage.setItem(
-      'customerPhone',
-      phoneNumber
-    )
+    setLoading(true)
+    setError('')
 
-    alert('Welcome back 👋')
+    try {
 
-    navigate('/cart')
+      const response = await fetch(
+        `${apiUrl}/api/customers/${phoneNumber}`
+      )
+
+      const data = await response.json()
+
+      if (!data.success) {
+
+        setError(
+          'No account found with this phone number'
+        )
+
+        return
+      }
+
+      localStorage.setItem(
+        'customerPhone',
+        data.customer.phoneNumber
+      )
+
+      showNotification(
+  'Logged in successfully',
+  'success'
+)
+
+      navigate(redirectTo)
+
+    } catch (err) {
+
+      console.log(err)
+
+      setError(
+        'Unable to login. Please try again.'
+      )
+
+    } finally {
+
+      setLoading(false)
+
+    }
+
   }
 
+
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#0f172a'
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: '#1e293b',
-          padding: '40px',
-          borderRadius: '16px',
-          width: '350px',
-          textAlign: 'center'
-        }}
-      >
-        <h1
-          style={{
-            color: '#f59e0b',
-            marginBottom: '20px'
-          }}
-        >
-          📦 My Orders Login
-        </h1>
+    <div className="customer-login-page">
+
+      <div className="customer-login-card">
+
+        <h1>Welcome Back</h1>
+
+        <p className="login-subtitle">
+          Login to your AndeKaAdda account
+        </p>
+
+        <label>
+          Phone Number
+        </label>
 
         <input
           type="tel"
-          placeholder="Enter Phone Number"
+          inputMode="numeric"
+          maxLength="10"
+          placeholder="Enter your phone number"
           value={phoneNumber}
           onChange={(e) =>
-            setPhoneNumber(e.target.value)
+            setPhoneNumber(
+              e.target.value.replace(
+                /\D/g,
+                ''
+              )
+            )
           }
-          style={{
-            width: '100%',
-            padding: '14px',
-            borderRadius: '10px',
-            border: 'none',
-            marginBottom: '20px',
-            fontSize: '16px'
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleLogin()
+            }
           }}
         />
 
+        {error && (
+          <p className="login-error">
+            {error}
+          </p>
+        )}
+
         <button
           onClick={handleLogin}
-          style={{
-            width: '100%',
-            padding: '14px',
-            backgroundColor: '#f59e0b',
-            color: 'white',
-            border: 'none',
-            borderRadius: '10px',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}
+          disabled={loading}
         >
-          View My Orders
+          {
+            loading
+              ? 'Checking...'
+              : 'Continue'
+          }
         </button>
+
+        <p className="login-note">
+  New user or can't find your account?{' '}
+
+  <span
+    className="login-link"
+    onClick={() =>
+      navigate('/signup', {
+        state: { redirectTo }
+      })
+    }
+  >
+    Create Account
+  </span>
+</p>
       </div>
+
     </div>
   )
 }

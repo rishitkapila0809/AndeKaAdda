@@ -181,7 +181,7 @@ const getCancelTimeLeft = (
   if (loading) {
     return (
       <div className="cart-container">
-        <h1>📦 Your Orders</h1>
+        <h1>Your Orders</h1>
         <p>Loading...</p>
       </div>
     )
@@ -189,7 +189,7 @@ const getCancelTimeLeft = (
 
   return (
     <div className="cart-container">
-      <h1>📦 Your Orders</h1>
+      <h1>Your Orders</h1>
 
       {showPhonePrompt && (
         <div className="phone-prompt">

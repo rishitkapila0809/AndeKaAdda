@@ -11,6 +11,9 @@ function Navbar({ isAdminLoggedIn, onAdminLogout }) {
   const [tapCount, setTapCount] =useState(0)
   const location = useLocation()
   const [adminMenuOpen, setAdminMenuOpen] = useState(false)
+  const [customerMenuOpen, setCustomerMenuOpen] = useState(false)
+  const isCustomerLoggedIn =
+  !!localStorage.getItem('customerPhone')
 
 const handleLogoTap = () => {
   const updatedCount = tapCount + 1
@@ -43,68 +46,108 @@ const handleLogoTap = () => {
   </div>
 
       <ul>
-  {!isAdminLoggedIn && 
-    location.pathname !== '/admin' && (
-    <>
-      <li><Link to="/">Place Order</Link></li>
-      <li>
-  <button
-    onClick={() => {
+{!isAdminLoggedIn &&
+  location.pathname !== '/admin' && (
+  <>
+    <li>
+      <Link to="/">
+        Place Order
+      </Link>
+    </li>
 
-      const storedPhone =
-        localStorage.getItem(
-          'customerPhone'
-        )
+{!isCustomerLoggedIn ? (
 
-      if (storedPhone) {
-        navigate('/cart')
-      } else {
-        navigate('/login')
-      }
-
-    }}
-    style={{
-      background: 'none',
-      border: 'none',
-      color: 'white',
-      cursor: 'pointer',
-      fontSize: '18px',
-      fontWeight: 'bold',
-      
-      
-    }}
-  >
-    My Orders
-  </button>
-</li>
-{localStorage.getItem(
-  'customerPhone'
-) && (
   <li>
     <button
+      className="customer-login-btn"
       onClick={() => {
-
-        localStorage.removeItem(
-          'customerPhone'
-        )
-
-        navigate('/')
-
-      }}
-      style={{
-        background: 'none',
-        border: 'none',
-        color: '#e62121',
-        cursor: 'pointer',
-        fontSize: '16px'
+        navigate('/login')
       }}
     >
-      Logout
+      Login / Sign Up
     </button>
   </li>
-)}
 
-    </>
+) : (
+
+  <li className="customer-menu-wrapper">
+
+    <button
+      className="customer-menu-btn"
+      onClick={() =>
+        setCustomerMenuOpen(
+          !customerMenuOpen
+        )
+      }
+    >
+      ☰
+    </button>
+
+    {customerMenuOpen && (
+
+      <div className="customer-dropdown">
+
+        <button
+          onClick={() => {
+            setCustomerMenuOpen(false)
+            navigate('/profile')
+          }}
+        >
+          Profile
+        </button>
+
+        <button
+          onClick={() => {
+            setCustomerMenuOpen(false)
+            navigate('/cart')
+          }}
+        >
+          My Orders
+        </button>
+
+        <button
+          onClick={() => {
+            setCustomerMenuOpen(false)
+            navigate('/schedule')
+          }}
+        >
+          My Schedule
+        </button>
+
+        <button
+          onClick={() => {
+            setCustomerMenuOpen(false)
+            navigate('/subscriptions')
+          }}
+        >
+          Subscriptions
+        </button>
+
+        <button
+          className="customer-dropdown-logout"
+          onClick={() => {
+
+            localStorage.removeItem(
+              'customerPhone'
+            )
+
+            setCustomerMenuOpen(false)
+
+            navigate('/')
+
+          }}
+        >
+          Logout
+        </button>
+
+      </div>
+
+    )}
+
+  </li>
+
+)}
+  </>
 )}
 
 

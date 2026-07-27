@@ -18,6 +18,11 @@ import socket from './socket'
 import Checkout from './pages/Checkout'
 import AnnouncementPopup from './components/AnnouncementPopup'
 import Settings from './pages/Settings'
+import Profile from './pages/Profile'
+import Signup from './pages/Signup'
+import NotificationBanner from './components/NotificationBanner'
+import MySchedule from './pages/MySchedule'
+import Subscriptions from './pages/Subscriptions'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -25,8 +30,9 @@ function AppRoutes({
   isAdminLoggedIn,
   handleAdminLogout,
   setIsAdminLoggedIn,
-  isMaintenanceEnabled
-}) {
+  isMaintenanceEnabled,
+  showNotification
+})  {
 
   const location = useLocation()
 
@@ -91,11 +97,44 @@ const isAdminPage =
           element={<OrderSuccess />}
         />
 
-        <Route
-          path="/login"
-          element={<CustomerLogin />}
-        />
+<Route
+  path="/login"
+  element={
+    <CustomerLogin
+      apiUrl={API_URL}
+      showNotification={showNotification}
+    />
+  }
+/>
+<Route
+  path="/profile"
+  element={
+    <Profile
+      apiUrl={API_URL}
+      showNotification={showNotification}
+    />
+  }
+/>  
 
+<Route
+  path="/schedule"
+  element={<MySchedule />}
+/>
+
+<Route
+  path="/subscriptions"
+  element={<Subscriptions />}
+/>
+
+<Route
+  path="/signup"
+  element={
+    <Signup
+      apiUrl={API_URL}
+      showNotification={showNotification}
+    />
+  }
+/>
         <Route
           path="/maintenance"
           element={<Maintenance />}
@@ -150,6 +189,33 @@ const isAdminPage =
 
 function App() {
 
+  const [notification, setNotification] =
+  useState({
+    message: '',
+    type: 'success'
+  })
+
+  const showNotification = (
+  message,
+  type = 'success'
+) => {
+
+  setNotification({
+    message,
+    type
+  })
+
+  setTimeout(() => {
+
+    setNotification({
+      message: '',
+      type: 'success'
+    })
+
+  }, 3000)
+
+}
+
 const [showSplash, setShowSplash] =
   useState(true)
 
@@ -168,7 +234,7 @@ useEffect(() => {
 
 useEffect(() => {
 
-  const version = 'feedbackform-1'
+  const version = 'account-update-1'
 
   const seenVersion =
     localStorage.getItem(
@@ -185,9 +251,9 @@ useEffect(() => {
 
 const closeAnnouncement = () => {
 
-  localStorage.setItem(
+   localStorage.setItem(
     'announcementVersion',
-    'v1'
+    'account-update-1'
   )
 
   setShowAnnouncement(false)
@@ -331,6 +397,56 @@ useEffect(() => {
   }
 
 }, [])
+
+useEffect(() => {
+
+  let hiddenAt = null
+
+  const handleVisibilityChange = () => {
+
+    if (document.visibilityState === 'hidden') {
+
+      hiddenAt = Date.now()
+
+    }
+
+    if (
+      document.visibilityState === 'visible' &&
+      hiddenAt
+    ) {
+
+      const timeAway =
+        Date.now() - hiddenAt
+
+      const fiveMinutes =
+        5 * 60 * 1000
+
+      if (timeAway >= fiveMinutes) {
+
+        window.location.reload()
+
+      }
+
+      hiddenAt = null
+    }
+
+  }
+
+  document.addEventListener(
+    'visibilitychange',
+    handleVisibilityChange
+  )
+
+  return () => {
+
+    document.removeEventListener(
+      'visibilitychange',
+      handleVisibilityChange
+    )
+
+  }
+
+}, [])
   
 
   const handleAdminLogout = () => {
@@ -354,12 +470,18 @@ useEffect(() => {
     <>
   <Router>
 
-    <AppRoutes
-      isAdminLoggedIn={isAdminLoggedIn}
-      handleAdminLogout={handleAdminLogout}
-      setIsAdminLoggedIn={setIsAdminLoggedIn}
-      isMaintenanceEnabled={isMaintenanceEnabled}
-    />
+  <NotificationBanner
+    message={notification.message}
+    type={notification.type}
+  />
+
+  <AppRoutes
+  isAdminLoggedIn={isAdminLoggedIn}
+  handleAdminLogout={handleAdminLogout}
+  setIsAdminLoggedIn={setIsAdminLoggedIn}
+  isMaintenanceEnabled={isMaintenanceEnabled}
+  showNotification={showNotification}
+/>
 
   {showAnnouncement && (
   <AnnouncementPopup

@@ -62,6 +62,27 @@ router.post('/create', async (req, res) => {
       ]
     )
 
+await db.query(
+  `
+  INSERT INTO customers (
+    "phoneNumber",
+    "name",
+    "blockName",
+    "roomNumber"
+  )
+  VALUES ($1, $2, $3, $4)
+
+  ON CONFLICT ("phoneNumber")
+  DO NOTHING
+  `,
+  [
+    phoneNumber,
+    buyerName,
+    block,
+    roomNumber
+  ]
+)
+
     const io = req.app.get('io')
 
     io.emit('ordersUpdated')
