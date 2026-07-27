@@ -2446,3 +2446,88 @@ border: 2px solid #6ea8fe;
   }
 
 }
+
+/* collapsed card order status */
+
+.compact-status-select {
+  padding: 6px 10px;
+
+  border-radius: 18px;
+  border: 1px solid;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  outline: none;
+}
+
+.compact-status-select.pending {
+  background: #2a0d3a;
+  color: #cc99ff;
+  border-color: #cc99ff;
+}
+
+.compact-status-select.preparing {
+  background: #0d223a;
+  color: #66ccff;
+  border-color: #66ccff;
+}
+
+.compact-status-select.ready {
+  background: #3a2d0d;
+  color: #ffcc66;
+  border-color: #ffcc66;
+}
+
+.compact-status-select.delivered {
+  background: #104428;
+  color: #00ff99;
+  border-color: #00ff99;
+}
+
+.compact-status-select.cancelled {
+  background: #3a0d0d;
+  color: #ff6666;
+  border-color: #ff4444;
+}
+
+/* refresh button */
+
+.admin-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+}
+
+.admin-title-row h1 {
+  margin: 0;
+}
+
+.admin-refresh-btn {
+  background: transparent;
+
+  border: none;
+
+  color: #f59e0b;
+
+  font-size: 28px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  padding: 2px 6px;
+
+  transition: transform 0.25s ease;
+}
+
+.admin-refresh-btn:hover {
+  transform: rotate(90deg);
+}
+
+.admin-refresh-btn:active {
+  transform: rotate(360deg);
+}

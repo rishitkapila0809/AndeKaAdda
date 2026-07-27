@@ -490,9 +490,7 @@ const orderDate =
   }
 )
 
-  if (!isAdminLoggedIn) {
-    return <AdminLogin onAdminLogin={onAdminLogin} />
-  }
+  
 
   const loadDeliveryInventory = async () => {
 
@@ -710,6 +708,14 @@ const toggleOrderDetails = (orderId) => {
 
 }
 
+if (!isAdminLoggedIn) {
+  return (
+    <AdminLogin
+      onAdminLogin={onAdminLogin}
+    />
+  )
+}
+
   return (
     <div className="admin-container">
 
@@ -761,7 +767,23 @@ const toggleOrderDetails = (orderId) => {
 )}
 
 
-  <h1>Kapila Maharaj Ki Jai!</h1>
+  <div className="admin-title-row">
+
+  <h1>
+    Kapila Maharaj Ki Jai!
+  </h1>
+
+  <button
+    className="admin-refresh-btn"
+    onClick={() =>
+      window.location.reload()
+    }
+    title="Refresh Dashboard"
+  >
+    ↻
+  </button>
+
+</div>
 
   <div
     style={{
@@ -1120,13 +1142,40 @@ inventory tracker */}
             <div>
               <h3>{order.buyerName}</h3>
 
-              <span
-                className={`status-badge ${order.status.toLowerCase()}`}
-              >
-                {order.status === 'Ready'
-                  ? 'Ready for Delivery'
-                  : order.status}
-              </span>
+              <select
+  className={`compact-status-select ${order.status.toLowerCase()}`}
+  value={order.status}
+  disabled={loading}
+  onClick={(e) =>
+    e.stopPropagation()
+  }
+  onChange={(e) =>
+    updateOrderStatus(
+      order.orderId,
+      e.target.value
+    )
+  }
+>
+  <option value="Pending">
+    Pending
+  </option>
+
+  <option value="Preparing">
+    Preparing
+  </option>
+
+  <option value="Ready">
+    Ready for Delivery
+  </option>
+
+  <option value="Delivered">
+    Delivered
+  </option>
+
+  <option value="Cancelled">
+    Cancelled
+  </option>
+</select>
             </div>
 
           </div>
