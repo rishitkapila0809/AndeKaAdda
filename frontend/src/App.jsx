@@ -398,37 +398,28 @@ useEffect(() => {
     )
   )
 
-  const refreshTime = setTimeout(() => {
+const twoMinutes = 2 * 60 * 1000
 
-    const fiveMinutes =
-      5 * 60 * 1000
+const checkIdle = () => {
 
-    const checkIdle = () => {
+  if (
+    Date.now() - lastActivity >= twoMinutes
+  ) {
 
-      if (
-        Date.now() - lastActivity >= fiveMinutes
-      ) {
+    updateSW(true)
 
-        updateSW(true)
+  }
 
-      } else {
+}
 
-        setTimeout(
-          checkIdle,
-          60000
-        )
-
-      }
-
-    }
-
-    checkIdle()
-
-  }, 60 * 60 * 1000)
+const refreshInterval = setInterval(
+  checkIdle,
+  30000
+)
 
   return () => {
 
-    clearTimeout(refreshTime)
+    clearInterval(refreshInterval)
 
     events.forEach(event =>
       window.removeEventListener(
@@ -461,10 +452,10 @@ useEffect(() => {
       const timeAway =
         Date.now() - hiddenAt
 
-      const fiveMinutes =
-        5 * 60 * 1000
+      const twoMinutes =
+        2 * 60 * 1000
 
-      if (timeAway >= fiveMinutes) {
+      if (timeAway >= twoMinutes) {
 
         updateSW(true)
 
