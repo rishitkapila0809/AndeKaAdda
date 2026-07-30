@@ -24,6 +24,8 @@ import NotificationBanner from './components/NotificationBanner'
 import MySchedule from './pages/MySchedule'
 import Subscriptions from './pages/Subscriptions'
 import AdminSchedules from './pages/AdminSchedules'
+import { registerSW } from 'virtual:pwa-register'
+import { updateSW } from './pwa'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -214,6 +216,10 @@ const isAdminPage =
 
 function App() {
 
+  const updateSW = registerSW({
+  immediate: true
+})
+
   const [notification, setNotification] =
   useState({
     message: '',
@@ -253,6 +259,12 @@ const [showSplash, setShowSplash] =
   }, 2500)
 
   return () => clearTimeout(timer)
+
+}, [])
+
+useEffect(() => {
+
+  updateSW()
 
 }, [])
 
@@ -397,7 +409,7 @@ useEffect(() => {
         Date.now() - lastActivity >= fiveMinutes
       ) {
 
-        window.location.reload()
+        updateSW(true)
 
       } else {
 
@@ -454,7 +466,7 @@ useEffect(() => {
 
       if (timeAway >= fiveMinutes) {
 
-        window.location.reload()
+        updateSW(true)
 
       }
 
