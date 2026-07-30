@@ -3,7 +3,11 @@ import {
   useNavigate,
   useLocation
 } from 'react-router-dom'
-import { useState } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef
+} from 'react'
 
 function Navbar({ isAdminLoggedIn, onAdminLogout }) {
   const navigate = useNavigate()
@@ -14,6 +18,8 @@ function Navbar({ isAdminLoggedIn, onAdminLogout }) {
   const [customerMenuOpen, setCustomerMenuOpen] = useState(false)
   const isCustomerLoggedIn =
   !!localStorage.getItem('customerPhone')
+  const adminMenuRef = useRef(null)
+const customerMenuRef = useRef(null)
 
 const handleLogoTap = () => {
   const updatedCount = tapCount + 1
@@ -32,6 +38,44 @@ const handleLogoTap = () => {
     setTapCount(0)
   }, 2000)
 }
+
+useEffect(() => {
+
+  const handleClickOutside = (event) => {
+
+    if (
+      adminMenuOpen &&
+      adminMenuRef.current &&
+      !adminMenuRef.current.contains(event.target)
+    ) {
+      setAdminMenuOpen(false)
+    }
+
+    if (
+      customerMenuOpen &&
+      customerMenuRef.current &&
+      !customerMenuRef.current.contains(event.target)
+    ) {
+      setCustomerMenuOpen(false)
+    }
+
+  }
+
+  document.addEventListener(
+    'mousedown',
+    handleClickOutside
+  )
+
+  return () =>
+    document.removeEventListener(
+      'mousedown',
+      handleClickOutside
+    )
+
+}, [
+  adminMenuOpen,
+  customerMenuOpen
+])
 
 
   return (
@@ -70,7 +114,10 @@ const handleLogoTap = () => {
 
 ) : (
 
-  <li className="customer-menu-wrapper">
+  <li
+  className="customer-menu-wrapper"
+  ref={customerMenuRef}
+>
 
     <button
       className="customer-menu-btn"
@@ -159,7 +206,10 @@ const handleLogoTap = () => {
       </Link>
     </li>
 
-    <li className="admin-menu-wrapper">
+    <li
+  className="admin-menu-wrapper"
+  ref={adminMenuRef}
+>
 
       <button
         className="admin-menu-btn"

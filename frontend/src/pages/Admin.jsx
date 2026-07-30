@@ -5,6 +5,7 @@ import {
   useRef
 } from 'react'
 import AdminLogin from './AdminLogin'
+import { updateSW } from '../pwa'
 
 
 
@@ -978,15 +979,15 @@ if (!isAdminLoggedIn) {
     Kapila Maharaj Ki Jai!
   </h1>
 
-  <button
-    className="admin-refresh-btn"
-    onClick={() =>
-      window.location.reload()
-    }
-    title="Refresh Dashboard"
-  >
-    ↻
-  </button>
+<button
+  className="admin-refresh-btn"
+  onClick={() =>
+    updateSW(true)
+  }
+  title="Refresh Dashboard"
+>
+  ↻
+</button>
 
 </div>
 
