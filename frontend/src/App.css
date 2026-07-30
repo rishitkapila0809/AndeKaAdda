@@ -2675,67 +2675,74 @@ border: 2px solid #6ea8fe;
 
 /* CREATE SCHEDULE */
 
-.schedule-create-section {
-  padding-top: 4px;
+.schedule-create-section{
+    margin-top: 8px;
+    padding: 24px;
+    background: linear-gradient(180deg,#182235,#131d2e);
+    border: 1px solid rgba(245,158,11,.18);
+    border-radius: 16px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
 }
 
-.schedule-create-section h2 {
-  margin: 0 0 6px;
-
-  color: #f8fafc;
-
-  font-size: 20px;
+.schedule-create-section h2{
+    margin:0 0 8px;
+    color:#ffffff;
+    font-size:26px;
+    font-weight:800;
+    text-align:center;
 }
 
-.schedule-create-section > p {
-  margin: 0 0 22px;
-
-  color: #94a3b8;
-
-  font-size: 13px;
-
-  line-height: 1.5;
+.schedule-create-section > p{
+    margin:0 0 28px;
+    color:#94a3b8;
+    font-size:14px;
+    line-height:1.6;
+    text-align:center;
 }
 
 
 /* INPUTS */
 
 .schedule-field {
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
-.schedule-field label {
-  display: block;
+.schedule-field label{
+    display:block;
+    margin-bottom:9px;
 
-  margin-bottom: 7px;
+    color:#f59e0b;
 
-  color: #cbd5e1;
-
-  font-size: 13px;
-  font-weight: 700;
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1px;
 }
 
-.schedule-field select {
-  width: 100%;
+.schedule-field select{
+    width:100%;
+    height:54px;
 
-  padding: 13px 14px;
+    padding:0 16px;
 
-  background: #1e293b;
+    background:#202b3f;
 
-  border: 1px solid #475569;
-  border-radius: 10px;
+    border:1px solid #374151;
+    border-radius:14px;
 
-  color: #f8fafc;
+    color:#fff;
 
-  font-size: 14px;
+    font-size:15px;
+    font-weight:500;
 
-  outline: none;
+    transition:.25s;
 
-  box-sizing: border-box;
+    box-sizing:border-box;
 }
 
-.schedule-field select:focus {
-  border-color: #f59e0b;
+.schedule-field select:focus{
+    border-color:#f59e0b;
+    box-shadow:0 0 0 4px rgba(245,158,11,.12);
 }
 
 .schedule-field select:disabled {
