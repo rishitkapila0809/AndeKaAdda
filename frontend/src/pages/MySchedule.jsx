@@ -18,7 +18,7 @@ import {
   CheckCircle2
 } from 'lucide-react'
 
-import scheduleMascot from '../assets/schedule-mascot.png'
+import scheduleMascot from '../assets/schedule-mascot.PNG'
 
 import NotificationBanner from '../components/NotificationBanner'
 
