@@ -13,8 +13,21 @@ router.post('/create', async (req, res) => {
       roomNumber,
       boiledEggs,
       eggBhurji,
+      saltSachets = 0,
       totalAmount
     } = req.body
+
+    const saltQuantity = Number(saltSachets)
+
+    if (
+      !Number.isInteger(saltQuantity) ||
+      saltQuantity < 0
+    ) {
+      return res.json({
+        success: false,
+        message: 'Invalid salt sachet quantity'
+      })
+    }
 
     const orderId = 'ORD' + Date.now()
     const status = 'Pending'
@@ -29,21 +42,22 @@ router.post('/create', async (req, res) => {
     await db.query(
       `
       INSERT INTO orders (
-  "orderId",
-  "buyerName",
-  "estimatedDeliveryTime",
-  "phoneNumber",
-  "blockName",
-  "roomNumber",
-  "boiledEggs",
-  "eggBhurji",
-  "totalAmount",
-  "status",
-  "paymentStatus",
-  "orderDate"
-)
+        "orderId",
+        "buyerName",
+        "estimatedDeliveryTime",
+        "phoneNumber",
+        "blockName",
+        "roomNumber",
+        "boiledEggs",
+        "eggBhurji",
+        "saltSachets",
+        "totalAmount",
+        "status",
+        "paymentStatus",
+        "orderDate"
+      )
       VALUES (
-        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12
+        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13
       )
       `,
       [
@@ -55,6 +69,7 @@ router.post('/create', async (req, res) => {
         roomNumber,
         boiledEggs,
         eggBhurji,
+        saltQuantity,
         totalAmount,
         status,
         paymentStatus,
@@ -62,26 +77,26 @@ router.post('/create', async (req, res) => {
       ]
     )
 
-await db.query(
-  `
-  INSERT INTO customers (
-    "phoneNumber",
-    "name",
-    "blockName",
-    "roomNumber"
-  )
-  VALUES ($1, $2, $3, $4)
+    await db.query(
+      `
+      INSERT INTO customers (
+        "phoneNumber",
+        "name",
+        "blockName",
+        "roomNumber"
+      )
+      VALUES ($1, $2, $3, $4)
 
-  ON CONFLICT ("phoneNumber")
-  DO NOTHING
-  `,
-  [
-    phoneNumber,
-    buyerName,
-    block,
-    roomNumber
-  ]
-)
+      ON CONFLICT ("phoneNumber")
+      DO NOTHING
+      `,
+      [
+        phoneNumber,
+        buyerName,
+        block,
+        roomNumber
+      ]
+    )
 
     const io = req.app.get('io')
 

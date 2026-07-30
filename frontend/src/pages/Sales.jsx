@@ -78,11 +78,11 @@ function Sales({ apiUrl }) {
     })
 
   const totalEggs =
-    filteredOrders.reduce(
-      (sum, order) =>
-        sum + order.boiledEggs,
-      0
-    )
+  filteredOrders.reduce(
+    (sum, order) =>
+      sum + Number(order.boiledEggs || 0),
+    0
+  )
 
   const totalBhurji =
     filteredOrders.reduce(
@@ -90,6 +90,13 @@ function Sales({ apiUrl }) {
         sum + order.eggBhurji,
       0
     )
+
+    const totalSalt =
+  filteredOrders.reduce(
+    (sum, order) =>
+      sum + Number(order.saltSachets || 0),
+    0
+  )
 
   const totalRevenue =
     filteredOrders.reduce(
@@ -152,6 +159,11 @@ function Sales({ apiUrl }) {
           <h2>🍛 Bhurji Sold</h2>
           <h1>{totalBhurji}</h1>
         </div>
+
+        <div style={cardStyle}>
+  <h2>Salt Sachets</h2>
+  <h1>{totalSalt}</h1>
+</div>
 
         <div style={cardStyle}>
           <h2>💰 Revenue</h2>

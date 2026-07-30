@@ -29,12 +29,30 @@ function Admin({ isAdminLoggedIn, onAdminLogin, onAdminLogout, apiUrl }) {
   setIsMaintenanceEnabled
 ] = useState(false)
   const [orders, setOrders] = useState([])
-  const [selectedDate, setSelectedDate] =
-  useState(
-    new Date()
-      .toISOString()
-      .split('T')[0]
-  )
+  const getIndiaToday = () => {
+
+  const parts =
+    new Intl.DateTimeFormat(
+      'en-CA',
+      {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }
+    ).formatToParts(new Date())
+
+  const getPart = type =>
+    parts.find(
+      part => part.type === type
+    )?.value
+
+  return `${getPart('year')}-${getPart('month')}-${getPart('day')}`
+}
+
+
+const [selectedDate, setSelectedDate] =
+  useState(getIndiaToday)
   const [loading, setLoading] = useState(false)
   const [showPopup, setShowPopup] =
   useState(false)
@@ -52,6 +70,8 @@ const [editingEggsWithMe, setEditingEggsWithMe] =
 const [editingBhurjiWithMe, setEditingBhurjiWithMe] =
   useState(false)
 
+  const [schedules, setSchedules] = useState([])
+
 const [eggInput, setEggInput] = useState('')
 const [bhurjiInput, setBhurjiInput] = useState('')
 const [expandedOrders, setExpandedOrders] = useState({})
@@ -67,6 +87,7 @@ const [expandedOrders, setExpandedOrders] = useState({})
   if (!isAdminLoggedIn) return
 
   loadOrders()
+  loadSchedules()
 
   
   const handleOrdersUpdated =
@@ -246,6 +267,36 @@ if (maintenanceData.success) {
   } catch (err) {
     console.error('Error fetching orders:', err)
   }
+}
+
+
+const loadSchedules = async () => {
+
+  try {
+
+    const response = await fetch(
+      `${apiUrl}/api/schedules/admin/all`
+    )
+
+    const data = await response.json()
+
+    if (data.success) {
+
+      setSchedules(
+        data.schedules || []
+      )
+
+    }
+
+  } catch (err) {
+
+    console.log(
+      'Error fetching schedules:',
+      err
+    )
+
+  }
+
 }
 
   const updateOrderStatus = async (orderId, newStatus) => {
@@ -568,51 +619,205 @@ const pendingStatuses = [
   'Ready'
 ]
 
-const pendingBoiledEggs = filteredOrders
-  .filter(order =>
-    pendingStatuses.includes(order.status)
-  )
-  .reduce(
-    (total, order) =>
-      total + Number(order.boiledEggs || 0),
-    0
+
+const normalPendingBoiledEggs =
+  filteredOrders
+    .filter(order =>
+      pendingStatuses.includes(
+        order.status
+      )
+    )
+    .reduce(
+      (total, order) =>
+        total +
+        Number(
+          order.boiledEggs || 0
+        ),
+      0
+    )
+
+
+const normalDeliveredBoiledEggs =
+  filteredOrders
+    .filter(order =>
+      order.status === 'Delivered'
+    )
+    .reduce(
+      (total, order) =>
+        total +
+        Number(
+          order.boiledEggs || 0
+        ),
+      0
+    )
+
+
+const getScheduleDateKey = date => {
+
+  return new Intl.DateTimeFormat(
+    'en-CA',
+    {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }
+  ).format(
+    new Date(date)
   )
 
-const deliveredBoiledEggs = filteredOrders
-  .filter(order =>
-    order.status === 'Delivered'
-  )
-  .reduce(
-    (total, order) =>
-      total + Number(order.boiledEggs || 0),
-    0
+}
+
+
+let scheduledPendingEggs = 0
+let scheduledDeliveredEggs = 0
+
+
+const now = new Date()
+
+const indiaParts =
+  new Intl.DateTimeFormat(
+    'en-CA',
+    {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }
+  ).formatToParts(now)
+
+
+const getIndiaPart = type =>
+  indiaParts.find(
+    part => part.type === type
+  )?.value
+
+
+const indiaToday =
+  `${getIndiaPart('year')}-${getIndiaPart('month')}-${getIndiaPart('day')}`
+
+const indiaHour =
+  Number(getIndiaPart('hour'))
+
+const indiaMinute =
+  Number(getIndiaPart('minute'))
+
+
+const scheduleWindowStarted =
+  indiaHour > 18 ||
+  (
+    indiaHour === 18 &&
+    indiaMinute >= 30
   )
 
-const pendingBhurji = filteredOrders
-  .filter(order =>
-    pendingStatuses.includes(order.status)
-  )
-  .reduce(
-    (total, order) =>
-      total + Number(order.eggBhurji || 0),
-    0
-  )
 
-const deliveredBhurji = filteredOrders
-  .filter(order =>
-    order.status === 'Delivered'
-  )
-  .reduce(
-    (total, order) =>
-      total + Number(order.eggBhurji || 0),
-    0
-  )
+schedules.forEach(schedule => {
+
+  const selectedDayRecord =
+    schedule.history?.find(
+      item =>
+        getScheduleDateKey(
+          item.scheduleDate
+        ) === selectedDate
+    )
+
+
+  if (
+    selectedDayRecord?.status ===
+    'Delivered'
+  ) {
+
+    scheduledDeliveredEggs +=
+      Number(
+        selectedDayRecord.eggQuantity || 0
+      )
+
+    return
+
+  }
+
+
+  if (
+    selectedDayRecord?.status ===
+    'Skipped'
+  ) {
+
+    return
+
+  }
+
+
+  if (
+    selectedDate === indiaToday &&
+    schedule.status === 'Active' &&
+    scheduleWindowStarted &&
+    Number(schedule.usedDeliveries) <
+      Number(schedule.totalDeliveries)
+  ) {
+
+    scheduledPendingEggs +=
+      Number(
+        schedule.eggQuantity || 0
+      )
+
+  }
+
+})
+
+
+const pendingBoiledEggs =
+  normalPendingBoiledEggs +
+  scheduledPendingEggs
+
+
+const deliveredBoiledEggs =
+  normalDeliveredBoiledEggs +
+  scheduledDeliveredEggs
+
+
+const pendingBhurji =
+  filteredOrders
+    .filter(order =>
+      pendingStatuses.includes(
+        order.status
+      )
+    )
+    .reduce(
+      (total, order) =>
+        total +
+        Number(
+          order.eggBhurji || 0
+        ),
+      0
+    )
+
+
+const deliveredBhurji =
+  filteredOrders
+    .filter(order =>
+      order.status === 'Delivered'
+    )
+    .reduce(
+      (total, order) =>
+        total +
+        Number(
+          order.eggBhurji || 0
+        ),
+      0
+    )
+
 
 const boiledEggDifference =
-  eggsWithMe - pendingBoiledEggs
+  eggsWithMe -
+  pendingBoiledEggs
+
 
 const bhurjiDifference =
-  bhurjiWithMe - pendingBhurji
+  bhurjiWithMe -
+  pendingBhurji
 
   const saveDeliveryInventory = async (
   newEggsWithMe,
@@ -1194,28 +1399,33 @@ inventory tracker */}
             <div>
               <span>Order</span>
 
-              <strong>
+              <strong className="compact-order-items">
 
-                {order.boiledEggs > 0 && (
-                  <>
-                    {order.boiledEggs} Boiled Egg
-                    {Number(order.boiledEggs) !== 1
-                      ? 's'
-                      : ''}
-                  </>
-                )}
+  {Number(order.boiledEggs) > 0 && (
+    <span>
+      {order.boiledEggs} Boiled Egg
+      {Number(order.boiledEggs) !== 1
+        ? 's'
+        : ''}
+    </span>
+  )}
 
-                {order.boiledEggs > 0 &&
-                  order.eggBhurji > 0 &&
-                  ' + '}
+  {Number(order.eggBhurji) > 0 && (
+    <span>
+      {order.eggBhurji} Egg Bhurji
+    </span>
+  )}
 
-                {order.eggBhurji > 0 && (
-                  <>
-                    {order.eggBhurji} Egg Bhurji
-                  </>
-                )}
+  {Number(order.saltSachets || 0) > 0 && (
+    <span className="compact-salt-item">
+      {order.saltSachets} Salt Sachet
+      {Number(order.saltSachets) !== 1
+        ? 's'
+        : ''}
+    </span>
+  )}
 
-              </strong>
+</strong>
 
             </div>
 
@@ -1298,6 +1508,15 @@ inventory tracker */}
                       {order.eggBhurji * 40}
                     </p>
                   )}
+
+                  {Number(order.saltSachets || 0) > 0 && (
+  <p>
+    <p>Salt Sachets:</p>{' '}
+    {order.saltSachets}
+    {' × ₹1 = ₹'}
+    {Number(order.saltSachets)}
+  </p>
+)}
 
                 </div>
 

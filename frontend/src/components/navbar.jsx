@@ -175,6 +175,16 @@ const handleLogoTap = () => {
       {adminMenuOpen && (
         <div className="admin-dropdown">
 
+
+                    <Link
+  to="/admin/schedules"
+  onClick={() =>
+    setAdminMenuOpen(false)
+  }
+>
+  Schedules
+</Link>
+
           <Link
             to="/sales"
             onClick={() =>
@@ -183,6 +193,8 @@ const handleLogoTap = () => {
           >
             Sales
           </Link>
+
+
 
           <Link
             to="/settings"

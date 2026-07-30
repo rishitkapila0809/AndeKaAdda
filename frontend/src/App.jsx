@@ -23,6 +23,7 @@ import Signup from './pages/Signup'
 import NotificationBanner from './components/NotificationBanner'
 import MySchedule from './pages/MySchedule'
 import Subscriptions from './pages/Subscriptions'
+import AdminSchedules from './pages/AdminSchedules'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -118,7 +119,11 @@ const isAdminPage =
 
 <Route
   path="/schedule"
-  element={<MySchedule />}
+  element={
+    <MySchedule
+      apiUrl={API_URL}
+    />
+  }
 />
 
 <Route
@@ -139,6 +144,26 @@ const isAdminPage =
           path="/maintenance"
           element={<Maintenance />}
         />
+
+<Route
+  path="/admin/schedules"
+  element={
+    isAdminLoggedIn
+      ? (
+        <AdminSchedules
+          apiUrl={API_URL}
+        />
+      )
+      : (
+        <Admin
+          isAdminLoggedIn={isAdminLoggedIn}
+          onAdminLogin={setIsAdminLoggedIn}
+          onAdminLogout={handleAdminLogout}
+          apiUrl={API_URL}
+        />
+      )
+  }
+/>
 
         <Route
           path="/sales"
@@ -219,22 +244,26 @@ function App() {
 const [showSplash, setShowSplash] =
   useState(true)
 
+  useEffect(() => {
+
+  const timer = setTimeout(() => {
+
+    setShowSplash(false)
+
+  }, 2500)
+
+  return () => clearTimeout(timer)
+
+}, [])
+
   const [
   showAnnouncement,
   setShowAnnouncement
 ] = useState(false)
 
 useEffect(() => {
-  const timer = setTimeout(() => {
-    setShowSplash(false)
-  }, 2500)
 
-  return () => clearTimeout(timer)
-}, [])
-
-useEffect(() => {
-
-  const version = 'account-update-1'
+  const version = 'seasonings-v1'
 
   const seenVersion =
     localStorage.getItem(
@@ -249,11 +278,13 @@ useEffect(() => {
 
 }, [])
 
+
+
 const closeAnnouncement = () => {
 
-   localStorage.setItem(
+  localStorage.setItem(
     'announcementVersion',
-    'account-update-1'
+    'seasonings-v1'
   )
 
   setShowAnnouncement(false)

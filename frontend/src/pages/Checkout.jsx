@@ -7,6 +7,9 @@ function Checkout({ apiUrl }) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 const [error, setError] = useState('')
+const [saltSachets, setSaltSachets] = useState(
+  location.state?.saltSachets || 0
+)
 
   const {
     buyerName,
@@ -19,6 +22,11 @@ const [error, setError] = useState('')
     bhurjiTotal,
     grandTotal
   } = location.state || {}
+
+  const saltTotal = saltSachets * 1
+
+const finalGrandTotal =
+  Number(grandTotal || 0) + saltTotal
 
   if (!location.state) {
     navigate('/')
@@ -40,14 +48,15 @@ const [error, setError] = useState('')
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          buyerName,
-          phoneNumber,
-          block,
-          roomNumber,
-          boiledEggs: eggQuantity,
-          eggBhurji: bhurjiQuantity,
-          totalAmount: grandTotal
-        })
+  buyerName,
+  phoneNumber,
+  block,
+  roomNumber,
+  boiledEggs: eggQuantity,
+  eggBhurji: bhurjiQuantity,
+  saltSachets,
+  totalAmount: finalGrandTotal
+})
       }
     )
 
@@ -114,9 +123,98 @@ navigate('/success')
           <span>₹{bhurjiTotal}</span>
         </div>
 
+        <div className="seasoning-divider"></div>
+
+<div className="checkout-seasonings">
+
+  <div className="seasoning-heading">
+    <div>
+      <h3>Seasonings</h3>
+      <p>Add some extra flavour to your eggs</p>
+    </div>
+  </div>
+
+  <div className="seasoning-item seasoning-available">
+
+    <div className="seasoning-info">
+      <strong>Salt </strong>
+      <span>₹1 per sachet</span>
+    </div>
+
+    <div className="seasoning-counter">
+
+      <button
+        type="button"
+        onClick={() =>
+          setSaltSachets(prev =>
+            Math.max(0, prev - 1)
+          )
+        }
+        disabled={saltSachets === 0}
+      >
+        −
+      </button>
+
+      <span>{saltSachets}</span>
+
+      <button
+        type="button"
+        onClick={() =>
+          setSaltSachets(prev => prev + 1)
+        }
+      >
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div className="seasoning-item seasoning-coming-soon">
+
+    <div className="seasoning-info">
+      <strong>Peri Peri Masala</strong>
+      <span>Spicy seasoning</span>
+    </div>
+
+    <span className="coming-soon-badge">
+      COMING SOON
+    </span>
+
+  </div>
+
+
+  <div className="seasoning-item seasoning-coming-soon">
+
+    <div className="seasoning-info">
+      <strong>Chaat Masala</strong>
+      <span>Chatpata seasoning</span>
+    </div>
+
+    <span className="coming-soon-badge">
+      COMING SOON
+    </span>
+
+  </div>
+
+</div>
+
+{saltSachets > 0 && (
+  <div className="summary-row">
+    <span>
+      Salt Sachets ({saltSachets})
+    </span>
+
+    <span>
+      ₹{saltTotal}
+    </span>
+  </div>
+)}
+
         <div className="summary-row grand-total">
           <span>Grand Total</span>
-          <span>₹{grandTotal}</span>
+          <span>₹{finalGrandTotal}</span>
         </div>
 
       </div>

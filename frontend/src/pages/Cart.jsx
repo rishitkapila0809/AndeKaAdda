@@ -257,8 +257,16 @@ const getCancelTimeLeft = (
               </span>
 </p>
                 <p><strong>Boiled Eggs:</strong> {order.boiledEggs}</p>
-                <p><strong>Egg Bhurji:</strong> {order.eggBhurji}</p>
-                <p><strong>Amount:</strong> ₹{order.totalAmount}</p>
+<p><strong>Egg Bhurji:</strong> {order.eggBhurji}</p>
+
+{Number(order.saltSachets || 0) > 0 && (
+  <p>
+    <strong>Salt Sachets:</strong>{' '}
+    {order.saltSachets}
+  </p>
+)}
+
+<p><strong>Amount:</strong> ₹{order.totalAmount}</p>
 
                 {order.status === 'Cancelled' ? (
                 <p

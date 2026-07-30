@@ -5,7 +5,7 @@ const orderRoutes = require('./routes/orders')
 const cors = require('cors')
 const adminRoutes = require('./routes/admin')
 const customerRoutes = require('./routes/customers')
-
+const scheduleRoutes = require('./routes/schedules')
 
 
 
@@ -33,6 +33,7 @@ app.use(express.json())
 app.use('/api/orders', orderRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/customers', customerRoutes)
+app.use('/api/schedules',scheduleRoutes)
 
 app.get('/', (req, res) => {
   res.json({
