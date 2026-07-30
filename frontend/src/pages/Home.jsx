@@ -235,7 +235,7 @@ socket.on(
       fontWeight: 'bold'
     }}
   >
-    🚫Sorry! Orders are currently closed
+    🚫! Orders are currently closed
 
     <div
       style={{
