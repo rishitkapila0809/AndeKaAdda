@@ -981,9 +981,12 @@ if (!isAdminLoggedIn) {
 
 <button
   className="admin-refresh-btn"
-  onClick={() =>
-    updateSW(true)
-  }
+  onClick={() => {
+  updateSW(true)
+  setTimeout(() => {
+    window.location.reload()
+  }, 300)
+}}
   title="Refresh Dashboard"
 >
   ↻
