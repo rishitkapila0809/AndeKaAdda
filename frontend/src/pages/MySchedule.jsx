@@ -77,19 +77,40 @@ const [skipping, setSkipping] =
     localStorage.getItem('customerPhone')
 
 
-  const isLocked = () => {
+//   const isLocked = () => {
 
-    const now = new Date()
+//     const now = new Date()
 
-    const hours = now.getHours()
-    const minutes = now.getMinutes()
+//     const hours = now.getHours()
+//     const minutes = now.getMinutes()
 
-    return (
-      hours > 17 ||
-      (hours === 17 && minutes >= 30)
-    )
+//     return (
+//       hours > 17 ||
+//       (hours === 17 && minutes >= 30)
+//     )
+//   }
+
+const isLocked = () => {
+
+  const now = new Date()
+
+  const isLaunchDay =
+    now.getFullYear() === 2026 &&
+    now.getMonth() === 6 &&
+    now.getDate() === 30
+
+  if (isLaunchDay) {
+    return false
   }
 
+  const hours = now.getHours()
+  const minutes = now.getMinutes()
+
+  return (
+    hours > 17 ||
+    (hours === 17 && minutes >= 30)
+  )
+}
   const locked = isLocked()
 
 
