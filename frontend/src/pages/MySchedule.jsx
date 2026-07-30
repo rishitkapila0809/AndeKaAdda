@@ -283,7 +283,7 @@ const skippedToday =
       setEditing(false)
 
       setNotification({
-  message: 'Schedule updated successfully.',
+  message: 'Schedule updated .',
   type: 'success'
 })
 
