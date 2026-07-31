@@ -235,7 +235,7 @@ socket.on(
       fontWeight: 'bold'
     }}
   >
-    🚫Sorry! Orders are currently closed
+    🚫Sorry! Orders are closed for today
 
     <div
       style={{
@@ -243,8 +243,7 @@ socket.on(
         fontSize: '16px'
       }}
     >
-      You can order only
-      between   18:30 PM – 20:00 PM
+      They will resume from tomorrow
     </div>
 
 
