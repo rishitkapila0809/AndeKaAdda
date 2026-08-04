@@ -117,9 +117,9 @@ function Maintenance() {
         Even Mr. Eggspert wants good CGPA!
         <br />
         <br />
-        AndeKaAdda services are temporarily closed
+        AndeKaAdda services will remain closed
         <br />
-        until the CAT-1 examinations end.
+        until the end of CAT-1 examinations.
         <br />
         <br />
         <strong>Services will resume after 16th August.</strong>
