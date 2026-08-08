@@ -106,9 +106,9 @@ function Maintenance() {
       />
 
       <h1 className="maintenance-title">
-        I Love You 
+        Mr. Eggspert
         <br />
-        <span>Meri Shaani </span>
+        <span>is preparing for CAT-1 </span>
       </h1>
 
      
