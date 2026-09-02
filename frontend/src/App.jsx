@@ -275,7 +275,7 @@ useEffect(() => {
 
 useEffect(() => {
 
-  const version = 'seasonings-v1'
+  const version = 'bhurji-v1'
 
   const seenVersion =
     localStorage.getItem(
@@ -296,7 +296,7 @@ const closeAnnouncement = () => {
 
   localStorage.setItem(
     'announcementVersion',
-    'seasonings-v1'
+    'bhurji-v1'
   )
 
   setShowAnnouncement(false)

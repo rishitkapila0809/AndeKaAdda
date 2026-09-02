@@ -9,7 +9,7 @@ export default function AnnouncementPopup({
 
   // const handleFeedbackClick = () => {
   //   window.open(
-  //     "https://docs.google.com/forms/d/e/1FAIpQLSfP1ERDIzKSxXnA9gGcCQCwS8ikxAubKNHH_b_Y7CYVcV2u4Q/viewform?usp=header",
+  //     "https://docs.google.com/forms/d/e/1FAIpQLSfP1ERDIzKSxXnA9gGcCQCW8S8ikxAubKNHH_b_Y7CYVcV2u4Q/viewform?usp=header",
   //     "_blank"
   //   );
 
@@ -38,45 +38,26 @@ export default function AnnouncementPopup({
 
 
         <h2>
-          Seasonings Are Here!
+          🍛 Egg Bhurji Is Here!
         </h2>
 
         <p>
-          Add some extra flavour to your eggs.
+          Egg Bhurji is now available
+          on AndeKaAdda.
         </p>
 
 
         <p className="announcement-note">
 
           <b>
-            Salt Sachets are now available
-            for just ₹1 each.
+            Egg Bhurji — ₹40 per plate
           </b>
 
           <br />
-          <br />
+          
 
-          You can add them directly from your
-          <b> Order Summary</b> before placing
-          your order.
-
-          <br />
-          <br />
-
-          And there's more on the way...
-
-          <br />
-          <br />
-
-          <b>Peri Peri Masala</b>
-          {' — '}
-          Coming Soon
-
-          <br />
-
-          <b>Chaat Masala</b>
-          {' — '}
-          Coming Soon
+          You can now add Egg Bhurji while
+          placing your order.
 
         </p>
 

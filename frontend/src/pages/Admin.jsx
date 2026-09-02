@@ -1421,13 +1421,22 @@ inventory tracker */}
   )}
 
   {Number(order.saltSachets || 0) > 0 && (
-    <span className="compact-salt-item">
+    <span>
       {order.saltSachets} Salt Sachet
       {Number(order.saltSachets) !== 1
         ? 's'
         : ''}
     </span>
   )}
+
+  {Number(order.cokeZero || 0) > 0 && (
+  <span>
+    {order.cokeZero} Coke Zero
+    {Number(order.cokeZero) !== 1
+      ? ''
+      : ''}
+  </span>
+)}
 
 </strong>
 
@@ -1515,10 +1524,19 @@ inventory tracker */}
 
                   {Number(order.saltSachets || 0) > 0 && (
   <p>
-    <p>Salt Sachets:</p>{' '}
+    Salt Sachets:{' '}
     {order.saltSachets}
     {' × ₹1 = ₹'}
     {Number(order.saltSachets)}
+  </p>
+)}
+
+{Number(order.cokeZero || 0) > 0 && (
+  <p>
+    Coke Zero:{' '}
+    {order.cokeZero}
+    {' × ₹20 = ₹'}
+    {Number(order.cokeZero) * 20}
   </p>
 )}
 

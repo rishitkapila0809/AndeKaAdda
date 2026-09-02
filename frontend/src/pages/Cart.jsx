@@ -266,6 +266,10 @@ const getCancelTimeLeft = (
   </p>
 )}
 
+{Number(order.cokeZero || 0) > 0 && (
+  <p><strong>Coke Zero:</strong> {order.cokeZero}</p>
+)}
+
 <p><strong>Amount:</strong> ₹{order.totalAmount}</p>
 
                 {order.status === 'Cancelled' ? (

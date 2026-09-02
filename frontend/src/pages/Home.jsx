@@ -7,7 +7,7 @@ import socket from '../socket'
 import Footer from '../components/Footer'
 
 function Home({ apiUrl }) {
-  const [eggQuantity, setEggQuantity] = useState(2)
+  const [eggQuantity, setEggQuantity] = useState(0)
   const [bhurjiQuantity, setBhurjiQuantity] = useState(0)
   const [buyerName, setBuyerName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
@@ -18,6 +18,7 @@ function Home({ apiUrl }) {
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const [isOrderingEnabled, setIsOrderingEnabled] = useState(true)
+  const [showBhurjiInfo, setShowBhurjiInfo] = useState(false)
 
   const boiledEggTotal = eggQuantity * 11
   const bhurjiTotal = bhurjiQuantity * 40
@@ -245,8 +246,6 @@ socket.on(
     >
       You can order only from 6:30PM - 8:00PM
     </div>
-
-
     
   </div>
 
@@ -278,21 +277,174 @@ socket.on(
           <p className="total">Total: ₹{boiledEggTotal}</p>
         </div>
 
-        <div className="product disabled">
-  <h2>🍛 Egg Bhurji</h2>
-  <p className="price">Coming Soon...</p>
-  <p className="note">This item is currently unavailable</p>
+  <div
+  className="product"
+  style={{
+    position: 'relative'
+  }}
+>
+  <h2
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '8px'
+    }}
+  >
+    🍛 Egg Bhurji
+
+    <button
+      onClick={() =>
+        setShowBhurjiInfo(!showBhurjiInfo)
+      }
+      style={{
+        border: 'none',
+        background: 'transparent',
+        color: '#94a3b8',
+        fontSize: '18px',
+        cursor: 'pointer',
+        padding: '0',
+        lineHeight: '1'
+      }}
+      aria-label="Egg Bhurji information"
+    >
+      ⓘ
+    </button>
+  </h2>
+
+  
+
+  <p className="price">₹40 per plate</p>
+  <p className="note">1 plate has 2 eggs</p>
 
   <select
-    disabled
+    value={bhurjiQuantity}
+    onChange={(e) =>
+      setBhurjiQuantity(Number(e.target.value))
+    }
     className="quantity-input"
   >
-    <option>Coming Soon...</option>
+    {[...Array(11).keys()].map((num) => (
+      <option key={num} value={num}>
+        {num}
+      </option>
+    ))}
   </select>
 
-  <p className="total">Coming Soon...</p>
+  <p className="total">Total: ₹{bhurjiTotal}</p>
 </div>
       </div>
+
+      {showBhurjiInfo && (
+  <div
+    onClick={() =>
+      setShowBhurjiInfo(false)
+    }
+    style={{
+      position: 'fixed',
+      inset: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.55)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      padding: '20px'
+    }}
+  >
+    <div
+      onClick={(e) =>
+        e.stopPropagation()
+      }
+      style={{
+        width: '100%',
+        maxWidth: '360px',
+        backgroundColor: '#1e293b',
+        color: 'white',
+        padding: '24px',
+        borderRadius: '18px',
+        border: '1px solid #475569',
+        boxShadow: '0 15px 40px rgba(0,0,0,0.45)',
+        textAlign: 'left'
+      }}
+    >
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '15px'
+        }}
+      >
+        <h3
+          style={{
+            margin: 0,
+            fontSize: '20px'
+          }}
+        >
+          About Egg Bhurji
+        </h3>
+
+        <button
+          onClick={() =>
+            setShowBhurjiInfo(false)
+          }
+          style={{
+            border: 'none',
+            background: 'transparent',
+            color: '#94a3b8',
+            fontSize: '24px',
+            cursor: 'pointer',
+            padding: '0',
+            lineHeight: '1'
+          }}
+        >
+          ×
+        </button>
+      </div>
+
+      <p
+        style={{
+          margin: 0,
+          fontSize: '15px',
+          lineHeight: '1.6',
+          color: '#e2e8f0'
+        }}
+      >
+        Egg Bhurji is{' '}
+        <strong>
+          not prepared in any hostel room
+        </strong>
+        . It is sourced from a{' '}
+        <strong>
+          paid mess
+        </strong>
+        , then packed and delivered to you.
+      </p>
+
+      <button
+        onClick={() =>
+          setShowBhurjiInfo(false)
+        }
+        style={{
+          width: '100%',
+          marginTop: '20px',
+          padding: '11px',
+          border: 'none',
+          borderRadius: '10px',
+          backgroundColor: '#f59e0b',
+          color: '#111827',
+          fontSize: '15px',
+          fontWeight: 'bold',
+          cursor: 'pointer'
+        }}
+      >
+        Got it
+      </button>
+
+    </div>
+  </div>
+)}
 
       <div className="delivery-section">
         <h2>📦 Delivery Details</h2>

@@ -4319,6 +4319,32 @@ border: 2px solid #6ea8fe;
   text-align: center;
 }
 
+/* SALT IMAGE */
+
+.salt-image {
+  width: 55px;
+  height: 70px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* COKE ZERO */
+
+.coke-item {
+  justify-content: flex-start;
+}
+
+.coke-image {
+  width: 55px;
+  height: 70px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.coke-item .seasoning-info {
+  flex: 1;
+  min-width: 0;
+}
 
 /* COMING SOON */
 
@@ -4392,4 +4418,114 @@ border: 2px solid #6ea8fe;
   color: #fbbf24;
   font-size: 11px !important;
   font-weight: 700;
+}
+
+
+/* COKE ZERO POPUP */
+
+.coke-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.coke-popup {
+  width: min(360px, 100%);
+  background: #111827;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.coke-popup-image {
+  width: 130px;
+  height: 160px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.coke-popup h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.coke-popup-price {
+  margin: 6px 0;
+  color: #f59e0b;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.coke-popup-text {
+  margin: 10px 0 18px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.coke-popup-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.coke-popup-counter button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 9px;
+  background: #f59e0b;
+  color: #111827;
+  font-size: 21px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.coke-popup-counter button:disabled {
+  background: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.coke-popup-counter span {
+  min-width: 25px;
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.coke-popup-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.coke-popup-buttons button {
+  flex: 1;
+  padding: 11px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.coke-add-button {
+  background: #f59e0b;
+  border: none;
+  color: #111827;
+}
+
+.coke-close-button {
+  background: transparent;
+  border: 1px solid #475569;
+  color: #cbd5e1;
 }

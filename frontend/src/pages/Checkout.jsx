@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import cokeZeroImage from '../assets/cokezero.png'
+import saltImage from '../assets/salt.png'
 
 function Checkout({ apiUrl }) {
 
@@ -10,6 +12,9 @@ const [error, setError] = useState('')
 const [saltSachets, setSaltSachets] = useState(
   location.state?.saltSachets || 0
 )
+const [cokeZero, setCokeZero] = useState(0)
+const [showCokePopup, setShowCokePopup] = useState(true)
+const [cokeAdded, setCokeAdded] = useState(false)
 
   const {
     buyerName,
@@ -23,10 +28,13 @@ const [saltSachets, setSaltSachets] = useState(
     grandTotal
   } = location.state || {}
 
-  const saltTotal = saltSachets * 1
+const saltTotal = saltSachets * 1
+const cokeTotal = cokeZero * 20
 
 const finalGrandTotal =
-  Number(grandTotal || 0) + saltTotal
+  Number(grandTotal || 0) +
+  saltTotal +
+  cokeTotal
 
   if (!location.state) {
     navigate('/')
@@ -55,6 +63,7 @@ const finalGrandTotal =
   boiledEggs: eggQuantity,
   eggBhurji: bhurjiQuantity,
   saltSachets,
+  cokeZero,
   totalAmount: finalGrandTotal
 })
       }
@@ -129,14 +138,19 @@ navigate('/success')
 
   <div className="seasoning-heading">
     <div>
-      <h3>Seasonings</h3>
-      <p>Add some extra flavour to your eggs</p>
+      <h3>Add Ons </h3>
+      <p>Add something extra to your order</p>
     </div>
   </div>
 
-  <div className="seasoning-item seasoning-available">
+ <div className="seasoning-item seasoning-available">
+  <img
+    src={saltImage}
+    alt="Salt sachet"
+    className="salt-image"
+  />
 
-    <div className="seasoning-info">
+  <div className="seasoning-info">
       <strong>Salt </strong>
       <span>₹1 per sachet</span>
     </div>
@@ -170,47 +184,52 @@ navigate('/success')
 
   </div>
 
+  <div className="seasoning-item seasoning-available coke-item">
+  <img
+    src={cokeZeroImage}
+    alt="Coke Zero 250ml"
+    className="coke-image"
+  />
 
-  <div className="seasoning-item seasoning-coming-soon">
-
-    <div className="seasoning-info">
-      <strong>Peri Peri Masala</strong>
-      <span>Spicy seasoning</span>
-    </div>
-
-    <span className="coming-soon-badge">
-      COMING SOON
-    </span>
-
+  <div className="seasoning-info">
+    <strong>Coke Zero</strong>
+    <span>₹20 per 250ml bottle</span>
   </div>
 
+  <div className="seasoning-counter">
+    <button
+      type="button"
+      onClick={() =>
+        setCokeZero(prev => Math.max(0, prev - 1))
+      }
+      disabled={cokeZero === 0}
+    >
+      −
+    </button>
 
-  <div className="seasoning-item seasoning-coming-soon">
+    <span>{cokeZero}</span>
 
-    <div className="seasoning-info">
-      <strong>Chaat Masala</strong>
-      <span>Chatpata seasoning</span>
-    </div>
-
-    <span className="coming-soon-badge">
-      COMING SOON
-    </span>
-
+    <button
+      type="button"
+      onClick={() =>
+        setCokeZero(prev => Math.min(5, prev + 1))
+      }
+      disabled={cokeZero === 5}
+    >
+      +
+    </button>
   </div>
+</div>
+
+
+  
+
+
+  
 
 </div>
 
-{saltSachets > 0 && (
-  <div className="summary-row">
-    <span>
-      Salt Sachets ({saltSachets})
-    </span>
 
-    <span>
-      ₹{saltTotal}
-    </span>
-  </div>
-)}
 
         <div className="summary-row grand-total">
           <span>Grand Total</span>
@@ -247,10 +266,100 @@ navigate('/success')
 </button>
 
 
+{showCokePopup && (
+  <div className="coke-popup-overlay">
+    <div className="coke-popup">
+
+      <img
+        src={cokeZeroImage}
+        alt="Coke Zero 250ml"
+        className="coke-popup-image"
+      />
+
+      <h2>Coke Zero</h2>
+
+      <p className="coke-popup-price">
+        ₹20 · 250ml bottle
+      </p>
+
+      <p className="coke-popup-text">
+        Add a refreshing Coke Zero to your order?
+      </p>
+
+      {cokeAdded && (
+  <div className="coke-popup-counter">
+    <button
+      type="button"
+      onClick={() =>
+        setCokeZero(prev => Math.max(1, prev - 1))
+      }
+      disabled={cokeZero === 1}
+    >
+      −
+    </button>
+
+    <span>{cokeZero}</span>
+
+    <button
+      type="button"
+      onClick={() =>
+        setCokeZero(prev => Math.min(5, prev + 1))
+      }
+      disabled={cokeZero === 5}
+    >
+      +
+    </button>
+  </div>
+)}
+
+<div className="coke-popup-buttons">
+  {!cokeAdded ? (
+    <>
+      <button
+        type="button"
+        className="coke-add-button"
+        onClick={() => {
+          setCokeZero(1)
+          setCokeAdded(true)
+        }}
+      >
+        ADD
+      </button>
+
+      <button
+        type="button"
+        className="coke-close-button"
+        onClick={() => setShowCokePopup(false)}
+      >
+        CLOSE
+      </button>
+    </>
+  ) : (
+    <button
+      type="button"
+      className="coke-add-button"
+      onClick={() => setShowCokePopup(false)}
+    >
+      DONE
+    </button>
+  )}
+</div>
+
+    </div>
+  </div>
+)}
+
+
 
     </div>
   )
 
 }
+
+
+
+
+
+
 
 export default Checkout

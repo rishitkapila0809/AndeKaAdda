@@ -14,7 +14,8 @@ router.post('/create', async (req, res) => {
       boiledEggs,
       eggBhurji,
       saltSachets = 0,
-      totalAmount
+cokeZero = 0,
+totalAmount
     } = req.body
 
     const saltQuantity = Number(saltSachets)
@@ -28,6 +29,19 @@ router.post('/create', async (req, res) => {
         message: 'Invalid salt sachet quantity'
       })
     }
+
+    const cokeQuantity = Number(cokeZero)
+
+if (
+  !Number.isInteger(cokeQuantity) ||
+  cokeQuantity < 0 ||
+  cokeQuantity > 5
+) {
+  return res.json({
+    success: false,
+    message: 'Invalid Coke Zero quantity'
+  })
+}
 
     const orderId = 'ORD' + Date.now()
     const status = 'Pending'
@@ -51,13 +65,14 @@ router.post('/create', async (req, res) => {
         "boiledEggs",
         "eggBhurji",
         "saltSachets",
+        "cokeZero",
         "totalAmount",
         "status",
         "paymentStatus",
         "orderDate"
       )
       VALUES (
-        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13
+        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14
       )
       `,
       [
@@ -69,6 +84,7 @@ router.post('/create', async (req, res) => {
         roomNumber,
         boiledEggs,
         eggBhurji,
+        cokeQuantity,
         saltQuantity,
         totalAmount,
         status,

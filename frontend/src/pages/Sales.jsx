@@ -98,6 +98,13 @@ function Sales({ apiUrl }) {
     0
   )
 
+  const totalCoke =
+  filteredOrders.reduce(
+    (sum, order) =>
+      sum + Number(order.cokeZero || 0),
+    0
+  )
+
   const totalRevenue =
     filteredOrders.reduce(
       (sum, order) =>
@@ -106,8 +113,8 @@ function Sales({ apiUrl }) {
     )
 
   const totalProfit =
-    totalEggs * 2.75 +
-    totalBhurji * 5
+    totalEggs * 4 +
+    totalBhurji * 6 + totalCoke * 8
 
   return (
     <div
@@ -163,6 +170,11 @@ function Sales({ apiUrl }) {
         <div style={cardStyle}>
   <h2>Salt Sachets</h2>
   <h1>{totalSalt}</h1>
+</div>
+
+<div style={cardStyle}>
+  <h2>🥤 Coke Zero</h2>
+  <h1>{totalCoke}</h1>
 </div>
 
         <div style={cardStyle}>
