@@ -244,7 +244,7 @@ socket.on(
         fontSize: '16px'
       }}
     >
-      You can order only from 6:30PM - 8:00PM
+      You can order only from 6:30PM - 7:30PM
     </div>
     
   </div>

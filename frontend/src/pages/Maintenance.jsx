@@ -1,39 +1,39 @@
-// import './Maintenance.css'
-// import maintenanceImage from '../assets/maintenance.PNG'
+import './Maintenance.css'
+import maintenanceImage from '../assets/maintenance.PNG'
 
-// function Maintenance() {
-//   return (
-//     <div className="maintenance-page">
+function Maintenance() {
+  return (
+    <div className="maintenance-page">
 
-//       <img
-//         src={maintenanceImage}
-//         alt="AndeKaAdda Maintenance"
-//         className="maintenance-image"
-//       />
+      <img
+        src={maintenanceImage}
+        alt="AndeKaAdda Maintenance"
+        className="maintenance-image"
+      />
 
-//       <h1 className="maintenance-title">
-//   Something <span>Eggciting</span><br /> is Coming!
-// </h1>
+      <h1 className="maintenance-title">
+  Something <span>Eggciting</span><br /> is Coming!
+</h1>
 
-//       <p className="maintenance-description">
-//         The site is currently under maintenance
-//         <br />
-//         as we work on exciting improvements
-//         <br />
-//         We'll be back very soon!
-//       </p>
+      <p className="maintenance-description">
+        The site is currently under maintenance
+        <br />
+        as we work on exciting improvements
+        <br />
+        We'll be back very soon!
+      </p>
 
-//       <p className="maintenance-footer">
-//         Thank you for your patience
-//         <br />
-//         and continued support.
-//       </p>
+      <p className="maintenance-footer">
+        Thank you for your patience
+        <br />
+        and continued support.
+      </p>
 
-//     </div>
-//   )
-// }
+    </div>
+  )
+}
 
-// export default Maintenance
+export default Maintenance
 
 // import './Maintenance.css'
 // import maintenanceImage from '../assets/maintenance.PNG'
@@ -93,46 +93,46 @@
 // export default Maintenance
 
 
-import './Maintenance.css'
-import maintenanceImage from '../assets/eggspertstudying.PNG'
+// import './Maintenance.css'
+// import maintenanceImage from '../assets/eggspertstudying.PNG'
 
-function Maintenance() {
-  return (
-    <div className="maintenance-page">
-      <img
-        src={maintenanceImage}
-        alt="Mr. Eggspert studying"
-        className="maintenance-image"
-      />
+// function Maintenance() {
+//   return (
+//     <div className="maintenance-page">
+//       <img
+//         src={maintenanceImage}
+//         alt="Mr. Eggspert studying"
+//         className="maintenance-image"
+//       />
 
-      <h1 className="maintenance-title">
-        Mr. Eggspert
-        <br />
-        <span>is preparing for CAT-1 </span>
-      </h1>
+//       <h1 className="maintenance-title">
+//         Mr. Eggspert
+//         <br />
+//         <span>is preparing for CAT-1 </span>
+//       </h1>
 
      
 
-      <p className="maintenance-description">
-        Even Mr. Eggspert wants good CGPA!
-        <br />
-        <br />
-        AndeKaAdda services will remain closed
-        <br />
-        until the end of CAT-1 examinations.
-        <br />
-        <br />
-        <strong>Services will resume after 16th August.</strong>
-        <br />
-        <br />
-        Good luck to everyone for CAT-1! You've got this! 💪
-      </p>
+//       <p className="maintenance-description">
+//         Even Mr. Eggspert wants good CGPA!
+//         <br />
+//         <br />
+//         AndeKaAdda services will remain closed
+//         <br />
+//         until the end of CAT-1 examinations.
+//         <br />
+//         <br />
+//         <strong>Services will resume after 16th August.</strong>
+//         <br />
+//         <br />
+//         Good luck to everyone for CAT-1! You've got this! 💪
+//       </p>
 
-      <p className="maintenance-footer">
-        Thank you for your patience and continued support ❤️
-      </p>
-    </div>
-  )
-}
+//       <p className="maintenance-footer">
+//         Thank you for your patience and continued support ❤️
+//       </p>
+//     </div>
+//   )
+// }
 
-export default Maintenance
+// export default Maintenance
