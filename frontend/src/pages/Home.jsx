@@ -21,7 +21,7 @@ function Home({ apiUrl }) {
   const [showBhurjiInfo, setShowBhurjiInfo] = useState(false)
 
   const boiledEggTotal = eggQuantity * 11
-  const bhurjiTotal = bhurjiQuantity * 40
+  const bhurjiTotal = bhurjiQuantity * 35
   const grandTotal = boiledEggTotal + bhurjiTotal
   const totalItems = eggQuantity + bhurjiQuantity
 
@@ -314,7 +314,7 @@ socket.on(
 
   
 
-  <p className="price">₹40 per plate</p>
+  <p className="price">₹35 per plate</p>
   <p className="note">1 plate has 2 eggs</p>
 
   <select

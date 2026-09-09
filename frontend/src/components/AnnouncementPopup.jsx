@@ -50,7 +50,7 @@ export default function AnnouncementPopup({
         <p className="announcement-note">
 
           <b>
-            Egg Bhurji — ₹40 per plate
+            Egg Bhurji — ₹35 per plate
           </b>
 
           <br />

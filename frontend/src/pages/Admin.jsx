@@ -1517,8 +1517,8 @@ inventory tracker */}
                   {order.eggBhurji > 0 && (
                     <p>
                       🍛 Egg Bhurji: {order.eggBhurji}
-                      {' × ₹40 = ₹'}
-                      {order.eggBhurji * 40}
+                      {' × ₹35 = ₹'}
+                      {order.eggBhurji * 35}
                     </p>
                   )}
 
