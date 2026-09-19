@@ -6,6 +6,7 @@ import {
 } from 'react'
 import AdminLogin from './AdminLogin'
 import { updateSW } from '../pwa'
+import { addOns } from '../components/AddOns'
 
 
 
@@ -914,6 +915,43 @@ const toggleOrderDetails = (orderId) => {
 
 }
 
+
+const getAddonQuantity = (
+  order,
+  addonId
+) => {
+
+  let addons = order.addons || {}
+
+  if (typeof addons === 'string') {
+    try {
+      addons = JSON.parse(addons)
+    } catch {
+      addons = {}
+    }
+  }
+
+  if (addons[addonId] !== undefined) {
+    return Number(
+      addons[addonId] || 0
+    )
+  }
+
+  if (addonId === 'salt') {
+    return Number(
+      order.saltSachets || 0
+    )
+  }
+
+  if (addonId === 'cokeZero') {
+    return Number(
+      order.cokeZero || 0
+    )
+  }
+
+  return 0
+}
+
 if (!isAdminLoggedIn) {
   return (
     <AdminLogin
@@ -1420,23 +1458,24 @@ inventory tracker */}
     </span>
   )}
 
-  {Number(order.saltSachets || 0) > 0 && (
-    <span>
-      {order.saltSachets} Salt Sachet
-      {Number(order.saltSachets) !== 1
-        ? 's'
-        : ''}
-    </span>
-  )}
+ {addOns.map(addOn => {
+  const quantity =
+  getAddonQuantity(
+    order,
+    addOn.id
+  )
 
-  {Number(order.cokeZero || 0) > 0 && (
-  <span>
-    {order.cokeZero} Coke Zero
-    {Number(order.cokeZero) !== 1
-      ? ''
-      : ''}
-  </span>
-)}
+  if (quantity <= 0) {
+    return null
+  }
+
+  return (
+    <span key={addOn.id}>
+      {quantity} {addOn.name}
+      {quantity !== 1 ? 's' : ''}
+    </span>
+  )
+})}
 
 </strong>
 
@@ -1522,23 +1561,31 @@ inventory tracker */}
                     </p>
                   )}
 
-                  {Number(order.saltSachets || 0) > 0 && (
-  <p>
-    Salt Sachets:{' '}
-    {order.saltSachets}
-    {' × ₹1 = ₹'}
-    {Number(order.saltSachets)}
-  </p>
-)}
+                  {addOns.map(addOn => {
+  const quantity =
+  getAddonQuantity(
+    order,
+    addOn.id
+  )
 
-{Number(order.cokeZero || 0) > 0 && (
-  <p>
-    Coke Zero:{' '}
-    {order.cokeZero}
-    {' × ₹20 = ₹'}
-    {Number(order.cokeZero) * 20}
-  </p>
-)}
+  if (quantity <= 0) {
+    return null
+  }
+
+  const total =
+    quantity * addOn.price
+
+  return (
+    <p key={addOn.id}>
+      {addOn.name}:{' '}
+      {quantity}
+      {' × ₹'}
+      {addOn.price}
+      {' = ₹'}
+      {total}
+    </p>
+  )
+})}
 
                 </div>
 

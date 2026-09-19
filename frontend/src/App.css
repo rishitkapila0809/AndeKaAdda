@@ -527,7 +527,36 @@ min-height: 52px;
   opacity:.5;
   cursor:not-allowed;
 }
+/* Out of Stock */
 
+.product-out-of-stock {
+  opacity: 0.65;
+  background: rgba(127, 29, 29, 0.18);
+  border-color: rgba(239, 68, 68, 0.6);
+  position: relative;
+}
+
+.product-out-of-stock::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(127, 29, 29, 0.08);
+  pointer-events: none;
+}
+
+.out-of-stock-badge {
+  display: inline-block;
+  margin: 8px 0 12px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #ff4d6d;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
 /* Delivery Section */
 .delivery-section {
   background: #1E293B;
@@ -4208,6 +4237,21 @@ border: 2px solid #6ea8fe;
 /* =========================
    CHECKOUT SEASONINGS
 ========================= */
+
+/* out of stock */
+
+.seasoning-out-of-stock {
+  opacity: 0.55;
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.addon-out-of-stock {
+  color: #ff3b5c;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
 
 .seasoning-divider {
   height: 1px;

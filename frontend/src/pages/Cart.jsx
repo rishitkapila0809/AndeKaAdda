@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { io } from 'socket.io-client'
 import { useNavigate } from 'react-router-dom'
+import { addOns } from '../components/AddOns'
 const socket = io(import.meta.env.VITE_API_URL, {
   transports: ['websocket'],
   reconnection: true,
@@ -14,6 +15,42 @@ function Cart({ apiUrl }) {
   const [showPhonePrompt, setShowPhonePrompt] = useState(false)
   const [, forceUpdate] = useState(0)
   const navigate = useNavigate()
+
+  const getAddonQuantity = (
+  order,
+  addonId
+) => {
+
+  let addons = order.addons || {}
+
+  if (typeof addons === 'string') {
+    try {
+      addons = JSON.parse(addons)
+    } catch {
+      addons = {}
+    }
+  }
+
+  if (addons[addonId] !== undefined) {
+    return Number(
+      addons[addonId] || 0
+    )
+  }
+
+  if (addonId === 'salt') {
+    return Number(
+      order.saltSachets || 0
+    )
+  }
+
+  if (addonId === 'cokeZero') {
+    return Number(
+      order.cokeZero || 0
+    )
+  }
+
+  return 0
+}
   
 
   useEffect(() => {
@@ -259,16 +296,27 @@ const getCancelTimeLeft = (
                 <p><strong>Boiled Eggs:</strong> {order.boiledEggs}</p>
 <p><strong>Egg Bhurji:</strong> {order.eggBhurji}</p>
 
-{Number(order.saltSachets || 0) > 0 && (
-  <p>
-    <strong>Salt Sachets:</strong>{' '}
-    {order.saltSachets}
-  </p>
-)}
+{addOns.map(addOn => {
 
-{Number(order.cokeZero || 0) > 0 && (
-  <p><strong>Coke Zero:</strong> {order.cokeZero}</p>
-)}
+  const quantity =
+    getAddonQuantity(
+      order,
+      addOn.id
+    )
+
+  if (quantity <= 0) {
+    return null
+  }
+
+  return (
+    <p key={addOn.id}>
+      <strong>
+        {addOn.name}:
+      </strong>{' '}
+      {quantity}
+    </p>
+  )
+})}
 
 <p><strong>Amount:</strong> ₹{order.totalAmount}</p>
 

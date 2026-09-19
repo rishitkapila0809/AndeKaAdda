@@ -7,40 +7,105 @@ const router = express.Router()
 router.post('/create', async (req, res) => {
   try {
     const {
-      buyerName,
-      phoneNumber,
-      block,
-      roomNumber,
-      boiledEggs,
-      eggBhurji,
-      saltSachets = 0,
-cokeZero = 0,
-totalAmount
-    } = req.body
+  buyerName,
+  phoneNumber,
+  block,
+  roomNumber,
+  boiledEggs,
+  eggBhurji,
+  addons = {},
+  totalAmount
+} = req.body
 
-    const saltQuantity = Number(saltSachets)
+const stockResult = await db.query(
+  `
+  SELECT "productStock"
+  FROM settings
+  WHERE id = 1
+  `
+)
 
-    if (
-      !Number.isInteger(saltQuantity) ||
-      saltQuantity < 0
-    ) {
-      return res.json({
-        success: false,
-        message: 'Invalid salt sachet quantity'
-      })
-    }
+const productStock =
+  stockResult.rows[0]?.productStock || {}
 
-    const cokeQuantity = Number(cokeZero)
+for (const [addonId, quantity] of Object.entries(addons)) {
+
+  const requestedQuantity =
+    Number(quantity)
+
+  if (
+    !Number.isInteger(requestedQuantity) ||
+    requestedQuantity < 0
+  ) {
+    return res.json({
+      success: false,
+      message: `Invalid quantity for ${addonId}`
+    })
+  }
+
+  if (
+    productStock[addonId] === false &&
+    requestedQuantity > 0
+  ) {
+    return res.json({
+      success: false,
+      message:
+        `${addonId} is currently out of stock`
+    })
+  }
+
+}
+
+
+
+for (const [addonId, quantity] of Object.entries(addons)) {
+
+  if (
+    Number(quantity) > 0 &&
+    productStock[addonId] === false
+  ) {
+    return res.json({
+      success: false,
+      message: `${addonId} is currently out of stock`
+    })
+  }
+
+}
 
 if (
-  !Number.isInteger(cokeQuantity) ||
-  cokeQuantity < 0 ||
-  cokeQuantity > 5
+  productStock.boiledEggs === false &&
+  Number(boiledEggs) > 0
 ) {
   return res.json({
     success: false,
-    message: 'Invalid Coke Zero quantity'
+    message: 'Boiled Eggs are currently out of stock'
   })
+}
+
+if (
+  productStock.eggBhurji === false &&
+  Number(eggBhurji) > 0
+) {
+  return res.json({
+    success: false,
+    message: 'Egg Bhurji is currently out of stock'
+  })
+}
+
+for (const [addonId, quantity] of Object.entries(addons)) {
+
+  const requestedQuantity = Number(quantity)
+
+  if (
+    requestedQuantity > 0 &&
+    productStock[addonId] === false
+  ) {
+    return res.json({
+      success: false,
+      message: `${addonId} is currently out of stock`
+    })
+  }
+
 }
 
     const orderId = 'ORD' + Date.now()
@@ -54,44 +119,42 @@ if (
       ).toISOString()
 
     await db.query(
-      `
-      INSERT INTO orders (
-        "orderId",
-        "buyerName",
-        "estimatedDeliveryTime",
-        "phoneNumber",
-        "blockName",
-        "roomNumber",
-        "boiledEggs",
-        "eggBhurji",
-        "saltSachets",
-        "cokeZero",
-        "totalAmount",
-        "status",
-        "paymentStatus",
-        "orderDate"
-      )
-      VALUES (
-        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14
-      )
-      `,
-      [
-        orderId,
-        buyerName,
-        estimatedDeliveryTime,
-        phoneNumber,
-        block,
-        roomNumber,
-        boiledEggs,
-        eggBhurji,
-        saltQuantity,
-        cokeQuantity,
-        totalAmount,
-        status,
-        paymentStatus,
-        orderDate
-      ]
-    )
+  `
+  INSERT INTO orders (
+    "orderId",
+    "buyerName",
+    "estimatedDeliveryTime",
+    "phoneNumber",
+    "blockName",
+    "roomNumber",
+    "boiledEggs",
+    "eggBhurji",
+    "addons",
+    "totalAmount",
+    "status",
+    "paymentStatus",
+    "orderDate"
+  )
+  VALUES (
+    $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13
+  )
+  `,
+  [
+    orderId,
+    buyerName,
+    estimatedDeliveryTime,
+    phoneNumber,
+    block,
+    roomNumber,
+    boiledEggs,
+    eggBhurji,
+    JSON.stringify(addons),
+    totalAmount,
+    status,
+    paymentStatus,
+    orderDate
+  ]
+)
 
     await db.query(
       `
@@ -765,6 +828,80 @@ io.emit('settingsUpdated')
 
   }
 )
+
+router.get(
+  '/product-stock',
+  async (req, res) => {
+    try {
+      const result = await db.query(
+        `
+        SELECT "productStock"
+        FROM settings
+        WHERE id = 1
+        `
+      )
+
+      res.json({
+        success: true,
+        productStock: result.rows[0].productStock || {}
+      })
+    } catch (err) {
+      res.json({
+        success: false,
+        message: err.message
+      })
+    }
+  }
+)
+
+router.put(
+  '/product-stock',
+  verifyAdmin,
+  async (req, res) => {
+    try {
+      const { productId, inStock } = req.body
+
+      if (
+        typeof productId !== 'string' ||
+        !productId.trim() ||
+        typeof inStock !== 'boolean'
+      ) {
+        return res.json({
+          success: false,
+          message: 'Invalid product stock data'
+        })
+      }
+
+      await db.query(
+        `
+        UPDATE settings
+        SET "productStock" =
+          jsonb_set(
+            COALESCE("productStock", '{}'::jsonb),
+            ARRAY[$1],
+            to_jsonb($2::boolean),
+            true
+          )
+        WHERE id = 1
+        `,
+        [productId.trim(), inStock]
+      )
+
+      const io = req.app.get('io')
+      io.emit('settingsUpdated')
+
+      res.json({
+        success: true
+      })
+    } catch (err) {
+      res.json({
+        success: false,
+        message: err.message
+      })
+    }
+  }
+)
+
 router.get(
   '/delivery-inventory',
   verifyAdmin,

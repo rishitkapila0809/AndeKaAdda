@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import cokeZeroImage from '../assets/cokezero.png'
-import saltImage from '../assets/salt.png'
+import { addOns } from '../components/AddOns'
+import socket from '../socket'
+
 
 function Checkout({ apiUrl }) {
 
@@ -9,12 +10,66 @@ function Checkout({ apiUrl }) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 const [error, setError] = useState('')
-const [saltSachets, setSaltSachets] = useState(
-  location.state?.saltSachets || 0
-)
-const [cokeZero, setCokeZero] = useState(0)
-const [showCokePopup, setShowCokePopup] = useState(true)
-const [cokeAdded, setCokeAdded] = useState(false)
+const [addonQuantities, setAddonQuantities] = useState(() => {
+  const quantities = {}
+
+  addOns.forEach(addon => {
+    quantities[addon.id] =
+      location.state?.addonQuantities?.[addon.id] || 0
+  })
+
+  return quantities
+})
+
+
+
+const [productStock, setProductStock] = useState({})
+
+useEffect(() => {
+
+  const loadProductStock = async () => {
+
+    try {
+
+      const response = await fetch(
+        `${apiUrl}/api/orders/product-stock`
+      )
+
+      const data = await response.json()
+
+      if (data.success) {
+        setProductStock(
+          data.productStock || {}
+        )
+      }
+
+    } catch (err) {
+
+      console.log(err)
+
+    }
+
+  }
+
+  loadProductStock()
+
+  const handleSettingsUpdate = () => {
+    loadProductStock()
+  }
+
+  socket.on(
+    'settingsUpdated',
+    handleSettingsUpdate
+  )
+
+  return () => {
+    socket.off(
+      'settingsUpdated',
+      handleSettingsUpdate
+    )
+  }
+
+}, [apiUrl])
 
   const {
     buyerName,
@@ -28,13 +83,17 @@ const [cokeAdded, setCokeAdded] = useState(false)
     grandTotal
   } = location.state || {}
 
-const saltTotal = saltSachets * 1
-const cokeTotal = cokeZero * 20
+const addonsTotal = addOns.reduce(
+  (total, addon) =>
+    total +
+    addon.price *
+      Number(addonQuantities[addon.id] || 0),
+  0
+)
 
 const finalGrandTotal =
   Number(grandTotal || 0) +
-  saltTotal +
-  cokeTotal
+  addonsTotal
 
   if (!location.state) {
     navigate('/')
@@ -62,8 +121,7 @@ const finalGrandTotal =
   roomNumber,
   boiledEggs: eggQuantity,
   eggBhurji: bhurjiQuantity,
-  saltSachets,
-  cokeZero,
+  addons: addonQuantities,
   totalAmount: finalGrandTotal
 })
       }
@@ -134,98 +192,106 @@ navigate('/success')
 
         <div className="seasoning-divider"></div>
 
+
+  
 <div className="checkout-seasonings">
 
   <div className="seasoning-heading">
     <div>
-      <h3>Add Ons </h3>
+      <h3>Add Ons</h3>
       <p>Add something extra to your order</p>
     </div>
   </div>
 
- <div className="seasoning-item seasoning-available">
-  <img
-    src={saltImage}
-    alt="Salt sachet"
-    className="salt-image"
-  />
+  {addOns.map(addon => {
 
-  <div className="seasoning-info">
-      <strong>Salt </strong>
-      <span>₹1 per sachet</span>
-    </div>
+    const quantity =
+      Number(addonQuantities[addon.id] || 0)
 
-    <div className="seasoning-counter">
+      const isInStock =
+  productStock[addon.id] !== false
 
-      <button
-        type="button"
-        onClick={() =>
-          setSaltSachets(prev =>
-            Math.max(0, prev - 1)
-          )
-        }
-        disabled={saltSachets === 0}
+    return (
+      <div
+        key={addon.id}
+        className={
+  `seasoning-item ${
+    isInStock
+      ? 'seasoning-available'
+      : 'seasoning-out-of-stock'
+  }`
+}
       >
-        −
-      </button>
 
-      <span>{saltSachets}</span>
+        <img
+          src={addon.image}
+          alt={addon.name}
+          className="coke-image"
+        />
 
-      <button
-        type="button"
-        onClick={() =>
-          setSaltSachets(prev => prev + 1)
-        }
-      >
-        +
-      </button>
+        <div className="seasoning-info">
 
-    </div>
+  <strong>{addon.name}</strong>
 
-  </div>
+  <span>
+    ₹{addon.price} {addon.unit}
+  </span>
 
-  <div className="seasoning-item seasoning-available coke-item">
-  <img
-    src={cokeZeroImage}
-    alt="Coke Zero 250ml"
-    className="coke-image"
-  />
+  {!isInStock && (
+    <strong className="addon-out-of-stock">
+      ✕ OUT OF STOCK
+    </strong>
+  )}
 
-  <div className="seasoning-info">
-    <strong>Coke Zero</strong>
-    <span>₹20 per 250ml bottle</span>
-  </div>
-
-  <div className="seasoning-counter">
-    <button
-      type="button"
-      onClick={() =>
-        setCokeZero(prev => Math.max(0, prev - 1))
-      }
-      disabled={cokeZero === 0}
-    >
-      −
-    </button>
-
-    <span>{cokeZero}</span>
-
-    <button
-      type="button"
-      onClick={() =>
-        setCokeZero(prev => Math.min(5, prev + 1))
-      }
-      disabled={cokeZero === 5}
-    >
-      +
-    </button>
-  </div>
 </div>
 
+        <div className="seasoning-counter">
 
-  
+          <button
+            type="button"
+            onClick={() =>
+              setAddonQuantities(prev => ({
+                ...prev,
+                [addon.id]: Math.max(
+                  0,
+                  Number(prev[addon.id] || 0) - 1
+                )
+              }))
+            }
+            disabled={
+  !isInStock ||
+  quantity === 0
+}
+          >
+            −
+          </button>
 
+          <span>{quantity}</span>
 
-  
+          <button
+            type="button"
+            onClick={() =>
+              setAddonQuantities(prev => ({
+                ...prev,
+                [addon.id]: Math.min(
+                  addon.maxQuantity,
+                  Number(prev[addon.id] || 0) + 1
+                )
+              }))
+            }
+            disabled={
+  !isInStock ||
+  quantity >= addon.maxQuantity
+}
+          >
+            +
+          </button>
+
+        </div>
+
+      </div>
+    )
+  })}
 
 </div>
 
@@ -266,7 +332,10 @@ navigate('/success')
 </button>
 
 
-{showCokePopup && (
+
+{/* COKE ZERO POPUP */}
+
+{/* {showCokePopup && (
   <div className="coke-popup-overlay">
     <div className="coke-popup">
 
@@ -347,7 +416,7 @@ navigate('/success')
 
     </div>
   </div>
-)}
+)} */}
 
 
 

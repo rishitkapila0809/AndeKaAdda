@@ -19,6 +19,7 @@ function Home({ apiUrl }) {
   const navigate = useNavigate()
   const [isOrderingEnabled, setIsOrderingEnabled] = useState(true)
   const [showBhurjiInfo, setShowBhurjiInfo] = useState(false)
+  const [productStock, setProductStock] = useState({})
 
   const boiledEggTotal = eggQuantity * 11
   const bhurjiTotal = bhurjiQuantity * 35
@@ -42,6 +43,30 @@ function Home({ apiUrl }) {
   data.isOrderingEnabled
 )
   }
+}
+
+const fetchProductStock = async () => {
+
+  try {
+
+    const response = await fetch(
+      `${apiUrl}/api/orders/product-stock`
+    )
+
+    const data = await response.json()
+
+    if (data.success) {
+      setProductStock(
+        data.productStock || {}
+      )
+    }
+
+  } catch (err) {
+
+    console.log(err)
+
+  }
+
 }
 
 
@@ -101,9 +126,10 @@ loadCustomerProfile()
 
 
 fetchOrderingStatus()
+fetchProductStock()
 
 const handleSettingsUpdate = () => {
-
+fetchProductStock()
   fetchOrderingStatus()
 
 }
@@ -151,6 +177,18 @@ socket.on(
 
 
 }, [])
+
+useEffect(() => {
+
+  if (productStock.boiledEggs === false) {
+    setEggQuantity(0)
+  }
+
+  if (productStock.eggBhurji === false) {
+    setBhurjiQuantity(0)
+  }
+
+}, [productStock])
 
   const handleContinue = () => {
 
@@ -255,12 +293,24 @@ socket.on(
 
 
       <div className="products-section">
-        <div className="product">
+        <div
+  className={`product ${
+    productStock.boiledEggs === false
+      ? 'product-out-of-stock'
+      : ''
+  }`}
+>
           <h2>🥚 Boiled Eggs</h2>
           <p className="price">₹11 per egg</p>
           <p className="note">Minimum order: 2 eggs</p>
+          {productStock.boiledEggs === false && (
+  <div className="out-of-stock-badge">
+    ❌ OUT OF STOCK
+  </div>
+)}
           <select
   value={eggQuantity}
+  disabled={productStock.boiledEggs === false}
   onChange={(e) =>
     setEggQuantity(Number(e.target.value))
   }
@@ -277,8 +327,12 @@ socket.on(
           <p className="total">Total: ₹{boiledEggTotal}</p>
         </div>
 
-  <div
-  className="product"
+<div
+  className={`product ${
+    productStock.eggBhurji === false
+      ? 'product-out-of-stock'
+      : ''
+  }`}
   style={{
     position: 'relative'
   }}
@@ -317,8 +371,15 @@ socket.on(
   <p className="price">₹35 per plate</p>
   <p className="note">1 plate has 2 eggs</p>
 
+{productStock.eggBhurji === false && (
+  <div className="out-of-stock-badge">
+    ❌ OUT OF STOCK
+  </div>
+)}
+
   <select
-    value={bhurjiQuantity}
+  value={bhurjiQuantity}
+  disabled={productStock.eggBhurji === false}
     onChange={(e) =>
       setBhurjiQuantity(Number(e.target.value))
     }

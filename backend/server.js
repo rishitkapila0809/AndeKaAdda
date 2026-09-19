@@ -6,6 +6,7 @@ const cors = require('cors')
 const adminRoutes = require('./routes/admin')
 const customerRoutes = require('./routes/customers')
 const scheduleRoutes = require('./routes/schedules')
+const costsRouter = require('./routes/costs')
 
 
 
@@ -34,6 +35,7 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/customers', customerRoutes)
 app.use('/api/schedules',scheduleRoutes)
+app.use('/api/costs', costsRouter)
 
 app.get('/', (req, res) => {
   res.json({
