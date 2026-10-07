@@ -5072,8 +5072,8 @@ border: 2px solid #6ea8fe;
     position: sticky;
     top: 0;
     width: 100%;
-    height: 54px;
-    min-height: 54px;
+    height: 58px;
+    min-height: 58px;
     padding: 0 14px !important;
     display: flex;
     align-items: center;
@@ -5098,9 +5098,10 @@ border: 2px solid #6ea8fe;
   }
 
   .navbar .full-logo {
-    height: 32px;
+    height: 42px;
+    max-height: 42px;
     width: auto;
-    max-width: 140px;
+    max-width: 155px;
     object-fit: contain;
     display: block;
     margin: 0;
