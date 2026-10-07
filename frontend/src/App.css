@@ -5125,15 +5125,14 @@ border: 2px solid #6ea8fe;
 
 
 /* =========================================================
-   MOBILE NAVBAR REDESIGN
+   MOBILE NAVBAR — FINAL
    ========================================================= */
 
 @media (max-width: 600px) {
 
-  /* -------------------------------------------------------
-     MAIN NAVBAR
-     Yellow top section + dark bottom action bar
-     ------------------------------------------------------- */
+  /* =========================
+     MAIN YELLOW NAVBAR
+     ========================= */
 
   .navbar {
     position: sticky;
@@ -5142,8 +5141,8 @@ border: 2px solid #6ea8fe;
 
     width: 100%;
 
-    height: 88px;
-    min-height: 88px;
+    height: 85px;
+    min-height: 85px;
 
     padding: 0 !important;
 
@@ -5161,34 +5160,36 @@ border: 2px solid #6ea8fe;
   }
 
 
-  /* -------------------------------------------------------
+  /* =========================
      LOGO
-     Centered inside the YELLOW section
-     ------------------------------------------------------- */
+     ========================= */
 
   .navbar .brand-logo {
     position: absolute;
 
-    top: 6px;
+    top: 3px;
     left: 50%;
 
     transform: translateX(-50%);
 
-    width: auto;
+    width: 180px;
+    height: 45px;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
 
-    z-index: 2;
+    z-index: 10;
   }
 
-
   .navbar .full-logo {
-    width: 145px;
-
+    width: 170px;
     height: auto;
+
+    max-height: 45px;
+
+    object-fit: contain;
 
     display: block;
 
@@ -5196,47 +5197,45 @@ border: 2px solid #6ea8fe;
   }
 
 
-  /* -------------------------------------------------------
+  /* =========================
      DARK ACTION BAR
-     Place Order + Hamburger
-     ------------------------------------------------------- */
+     ========================= */
 
   .navbar > ul {
-    position: absolute;
+  position: absolute;
 
-    left: 0;
-    right: 0;
-    bottom: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-    width: 100%;
-    height: 40px;
+  width: 100%;
+  height: 40px;
 
-    margin: 0;
-    padding: 0 14px;
+  margin: 0;
+  padding: 0 14px;
 
-    display: flex;
+  display: flex;
 
-    align-items: center;
-    justify-content: space-between;
+  align-items: center;
+  justify-content: space-between;
 
-    background: #0f172a;
+  /* No background — page background shows through */
+  background: transparent;
 
-    box-sizing: border-box;
+  box-sizing: border-box;
 
-    z-index: 3;
-  }
+  z-index: 20;
+}
 
-
-  /* -------------------------------------------------------
+  /* =========================
      PLACE ORDER
-     ------------------------------------------------------- */
+     ========================= */
 
   .navbar > ul > li:first-child {
     display: flex;
 
     align-items: center;
   }
-
 
   .navbar > ul > li:first-child a {
     padding: 0;
@@ -5254,7 +5253,6 @@ border: 2px solid #6ea8fe;
     transform: none;
   }
 
-
   .navbar > ul > li:first-child a:hover {
     background: transparent;
 
@@ -5262,9 +5260,42 @@ border: 2px solid #6ea8fe;
   }
 
 
-  /* -------------------------------------------------------
-     CUSTOMER HAMBURGER
-     ------------------------------------------------------- */
+  /* =========================
+     LOGIN / SIGN UP
+     ========================= */
+
+  .navbar .customer-login-btn {
+    padding: 6px 12px;
+
+    background: #f59e0b;
+
+    border: none;
+
+    border-radius: 10px;
+
+    color: #111827;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+  }
+
+  .navbar .customer-login-btn:hover {
+    background: #fbbf24;
+
+    transform: none;
+  }
+
+
+  /* =========================
+     HAMBURGER
+     ========================= */
 
   .navbar .customer-menu-wrapper {
     position: relative;
@@ -5278,12 +5309,11 @@ border: 2px solid #6ea8fe;
     margin-left: auto;
   }
 
-
   .navbar .customer-menu-btn {
-    padding: 0;
-
     width: 32px;
     height: 32px;
+
+    padding: 0;
 
     display: flex;
 
@@ -5304,9 +5334,9 @@ border: 2px solid #6ea8fe;
   }
 
 
-  /* -------------------------------------------------------
+  /* =========================
      CUSTOMER DROPDOWN
-     ------------------------------------------------------- */
+     ========================= */
 
   .navbar .customer-dropdown {
     top: calc(100% + 8px);
@@ -5316,35 +5346,6 @@ border: 2px solid #6ea8fe;
     width: 170px;
 
     z-index: 10000;
-  }
-
-
-  /* -------------------------------------------------------
-     LOGIN / SIGN UP
-     When customer isn't logged in
-     ------------------------------------------------------- */
-
-  .navbar > ul > li:nth-child(2) {
-    display: flex;
-
-    align-items: center;
-
-    margin-left: auto;
-  }
-
-
-  .navbar .customer-login-btn {
-    padding: 5px 8px;
-
-    background: transparent;
-
-    border: none;
-
-    color: #f8fafc;
-
-    font-size: 13px;
-
-    font-weight: 700;
   }
 
 }
