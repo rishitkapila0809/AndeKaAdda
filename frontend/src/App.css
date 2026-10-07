@@ -5167,13 +5167,13 @@ border: 2px solid #6ea8fe;
 .navbar .brand-logo {
   position: absolute;
 
-  top: 4px;
-  left: 12px;
+  top: 8px;
+  left: 14px;
 
   transform: none;
 
-  width: auto;
-  height: 45px;
+  width: 180px;
+  height: 50px;
 
   display: flex;
 
@@ -5184,10 +5184,10 @@ border: 2px solid #6ea8fe;
 }
 
 .navbar .full-logo {
-  width: 145px;
+  width: 180px;
   height: auto;
 
-  max-height: 45px;
+  max-height: 50px;
 
   object-fit: contain;
 
@@ -5231,27 +5231,32 @@ border: 2px solid #6ea8fe;
      PLACE ORDER
      ========================= */
 
-  .navbar > ul > li:first-child {
-    display: flex;
+ .navbar > ul > li:first-child {
+  position: absolute;
 
-    align-items: center;
-  }
+  left: 50%;
+  transform: translateX(-50%);
 
-  .navbar > ul > li:first-child a {
-    padding: 0;
+  display: flex;
+  align-items: center;
 
-    color: #f8fafc;
+  margin: 0;
+}
 
-    font-size: 15px;
+.navbar > ul > li:first-child a {
+  padding: 0;
 
-    font-weight: 800;
+  color: #f8fafc;
 
-    text-decoration: none;
+  font-size: 15px;
+  font-weight: 800;
 
-    background: transparent;
+  text-decoration: none;
 
-    transform: none;
-  }
+  background: transparent;
+
+  white-space: nowrap;
+}
 
   .navbar > ul > li:first-child a:hover {
     background: transparent;
@@ -5264,27 +5269,25 @@ border: 2px solid #6ea8fe;
      LOGIN / SIGN UP
      ========================= */
 
-  .navbar .customer-login-btn {
-    padding: 6px 12px;
+.navbar .customer-login-btn {
+  position: absolute;
 
-    background: #f59e0b;
+  right: 14px;
 
-    border: none;
+  padding: 6px 12px;
 
-    border-radius: 10px;
+  background: #f59e0b;
 
-    color: #111827;
+  border: none;
+  border-radius: 10px;
 
-    font-size: 12px;
+  color: #111827;
 
-    font-weight: 800;
+  font-size: 12px;
+  font-weight: 800;
 
-    line-height: 1;
-
-    cursor: pointer;
-
-    white-space: nowrap;
-  }
+  white-space: nowrap;
+}
 
   .navbar .customer-login-btn:hover {
     background: #fbbf24;
@@ -5297,17 +5300,16 @@ border: 2px solid #6ea8fe;
      HAMBURGER
      ========================= */
 
-  .navbar .customer-menu-wrapper {
-    position: relative;
+.navbar .customer-menu-wrapper {
+  position: absolute;
 
-    right: auto;
+  right: 14px;
 
-    display: flex;
+  display: flex;
+  align-items: center;
 
-    align-items: center;
-
-    margin-left: auto;
-  }
+  margin: 0;
+}
 
   .navbar .customer-menu-btn {
     width: 32px;
@@ -5332,6 +5334,17 @@ border: 2px solid #6ea8fe;
 
     cursor: pointer;
   }
+
+  .navbar .admin-menu-wrapper {
+  position: absolute;
+
+  right: 14px;
+
+  display: flex;
+  align-items: center;
+
+  margin: 0;
+}
 
 
   /* =========================
