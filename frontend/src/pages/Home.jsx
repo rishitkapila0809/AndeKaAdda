@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import socket from '../socket'
 import Footer from '../components/Footer'
 
+
 function Home({ apiUrl }) {
   const [eggQuantity, setEggQuantity] = useState(0)
   const [bhurjiQuantity, setBhurjiQuantity] = useState(0)
@@ -19,6 +20,7 @@ function Home({ apiUrl }) {
   const navigate = useNavigate()
   const [isOrderingEnabled, setIsOrderingEnabled] = useState(true)
   const [showBhurjiInfo, setShowBhurjiInfo] = useState(false)
+  const [showEggInfo, setShowEggInfo] = useState(false);
   const [productStock, setProductStock] = useState({})
 
   const boiledEggTotal = eggQuantity * 11
@@ -292,109 +294,313 @@ useEffect(() => {
 )}
 
 
-      <div className="products-section">
-        <div
-  className={`product ${
-    productStock.boiledEggs === false
-      ? 'product-out-of-stock'
-      : ''
-  }`}
->
-          <h2>🥚 Boiled Eggs</h2>
-          <p className="price">₹11 per egg</p>
-          <p className="note">Minimum order: 2 eggs</p>
-          {productStock.boiledEggs === false && (
-  <div className="out-of-stock-badge">
-    ❌ OUT OF STOCK
-  </div>
-)}
-          <select
-  value={eggQuantity}
-  disabled={productStock.boiledEggs === false}
-  onChange={(e) =>
-    setEggQuantity(Number(e.target.value))
-  }
-  className="quantity-input"
->
-  {[...Array(21).keys()]
-    .filter((num) => num !== 1)
-    .map((num) => (
-      <option key={num} value={num}>
-        {num}
-      </option>
-    ))}
-</select>
-          <p className="total">Total: ₹{boiledEggTotal}</p>
-        </div>
+     <div className="products-section">
 
-<div
-  className={`product ${
-    productStock.eggBhurji === false
-      ? 'product-out-of-stock'
-      : ''
-  }`}
-  style={{
-    position: 'relative'
-  }}
->
-  <h2
+  {/* ================= BOILED EGGS ================= */}
+
+  <div className="product-wrapper">
+
+    <div
+      className={`product ${
+        productStock.boiledEggs === false
+          ? 'product-out-of-stock'
+          : ''
+      }`}
+    >
+
+      <div className="product-bottom-content">
+
+        <h2 className="product-title">
+
+  <span className="title-white">Boiled</span>
+  <span className="title-yellow">Eggs</span>
+
+  <button
+    onClick={() =>
+      setShowEggInfo(!showEggInfo)
+    }
+    className="bhurji-info-btn"
+    aria-label="Boiled Eggs information"
+  >
+    ⓘ
+  </button>
+
+</h2>
+
+        <p className="product-price-box">
+          ₹11 <span>per egg</span>
+        </p>
+
+      </div>
+
+      {productStock.boiledEggs === false && (
+        <div className="out-of-stock-badge">
+          ❌ OUT OF STOCK
+        </div>
+      )}
+
+    </div>
+
+
+    {/* BOILED EGG QUANTITY — OUTSIDE CARD */}
+
+    <div className="quantity-counter">
+
+      <button
+        type="button"
+        onClick={() =>
+          setEggQuantity(
+            eggQuantity === 2
+              ? 0
+              : eggQuantity - 1
+          )
+        }
+        disabled={
+          productStock.boiledEggs === false ||
+          eggQuantity === 0
+        }
+        className="quantity-btn"
+      >
+        −
+      </button>
+
+      <span className="quantity-value">
+        {eggQuantity}
+      </span>
+
+      <button
+        type="button"
+        onClick={() =>
+          setEggQuantity(
+            eggQuantity === 0
+              ? 2
+              : eggQuantity + 1
+          )
+        }
+        disabled={
+          productStock.boiledEggs === false ||
+          eggQuantity >= 20
+        }
+        className="quantity-btn"
+      >
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+
+  {/* ================= EGG BHURJI ================= */}
+
+  <div className="product-wrapper">
+
+    <div
+      className={`product ${
+        productStock.eggBhurji === false
+          ? 'product-out-of-stock'
+          : ''
+      }`}
+    >
+
+      <div className="product-bottom-content">
+
+        <h2 className="product-title">
+
+          <span className="title-white">Egg</span>
+          <span className="title-yellow">Bhurji</span>
+
+          <button
+            onClick={() =>
+              setShowBhurjiInfo(!showBhurjiInfo)
+            }
+            className="bhurji-info-btn"
+            aria-label="Egg Bhurji information"
+          >
+            ⓘ
+          </button>
+
+        </h2>
+
+        <p className="product-price-box">
+          ₹35 <span>per plate</span>
+        </p>
+
+      </div>
+
+      {productStock.eggBhurji === false && (
+        <div className="out-of-stock-badge">
+          ❌ OUT OF STOCK
+        </div>
+      )}
+
+    </div>
+
+
+    {/* BHURJI QUANTITY — OUTSIDE CARD */}
+
+    <div className="quantity-counter">
+
+      <button
+        type="button"
+        onClick={() =>
+          setBhurjiQuantity(
+            Math.max(0, bhurjiQuantity - 1)
+          )
+        }
+        disabled={
+          productStock.eggBhurji === false ||
+          bhurjiQuantity <= 0
+        }
+        className="quantity-btn"
+      >
+        −
+      </button>
+
+      <span className="quantity-value">
+        {bhurjiQuantity}
+      </span>
+
+      <button
+        type="button"
+        onClick={() =>
+          setBhurjiQuantity(
+            Math.min(10, bhurjiQuantity + 1)
+          )
+        }
+        disabled={
+          productStock.eggBhurji === false ||
+          bhurjiQuantity >= 10
+        }
+        className="quantity-btn"
+      >
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+{showEggInfo && (
+  <div
+    onClick={() =>
+      setShowEggInfo(false)
+    }
     style={{
+      position: 'fixed',
+      inset: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.55)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '8px'
+      zIndex: 1000,
+      padding: '20px'
     }}
   >
-    🍛 Egg Bhurji
 
-    <button
-      onClick={() =>
-        setShowBhurjiInfo(!showBhurjiInfo)
+    <div
+      onClick={(e) =>
+        e.stopPropagation()
       }
       style={{
-        border: 'none',
-        background: 'transparent',
-        color: '#94a3b8',
-        fontSize: '18px',
-        cursor: 'pointer',
-        padding: '0',
-        lineHeight: '1'
+        width: '100%',
+        maxWidth: '360px',
+        backgroundColor: '#1e293b',
+        color: 'white',
+        padding: '24px',
+        borderRadius: '18px',
+        border: '1px solid #475569',
+        boxShadow: '0 15px 40px rgba(0,0,0,0.45)',
+        textAlign: 'left'
       }}
-      aria-label="Egg Bhurji information"
     >
-      ⓘ
-    </button>
-  </h2>
 
-  
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '15px'
+        }}
+      >
 
-  <p className="price">₹35 per plate</p>
-  <p className="note">1 plate has 2 eggs</p>
+        <h3
+          style={{
+            margin: 0,
+            fontSize: '20px'
+          }}
+        >
+          About Boiled Eggs
+        </h3>
 
-{productStock.eggBhurji === false && (
-  <div className="out-of-stock-badge">
-    ❌ OUT OF STOCK
+        <button
+          onClick={() =>
+            setShowEggInfo(false)
+          }
+          style={{
+            border: 'none',
+            background: 'transparent',
+            color: '#94a3b8',
+            fontSize: '24px',
+            cursor: 'pointer',
+            padding: '0',
+            lineHeight: '1'
+          }}
+        >
+          ×
+        </button>
+
+      </div>
+
+      <p
+        style={{
+          margin: 0,
+          fontSize: '15px',
+          lineHeight: '1.6',
+          color: '#e2e8f0'
+        }}
+      >
+        1. The minimum order for boiled eggs is{' '}
+        <strong>2 eggs</strong>.
+        <br />
+        <br />
+        2. Eggs are provided{' '}
+        <strong>with the shell</strong>,
+        so you will need to{' '}
+        <strong>peel them yourself.</strong>{' '}
+        
+      </p>
+
+      <button
+        onClick={() =>
+          setShowEggInfo(false)
+        }
+        style={{
+          width: '100%',
+          marginTop: '20px',
+          padding: '11px',
+          border: 'none',
+          borderRadius: '10px',
+          backgroundColor: '#f59e0b',
+          color: '#111827',
+          fontSize: '15px',
+          fontWeight: 'bold',
+          cursor: 'pointer'
+        }}
+      >
+        Got it
+      </button>
+
+    </div>
+
   </div>
 )}
 
-  <select
-  value={bhurjiQuantity}
-  disabled={productStock.eggBhurji === false}
-    onChange={(e) =>
-      setBhurjiQuantity(Number(e.target.value))
-    }
-    className="quantity-input"
-  >
-    {[...Array(11).keys()].map((num) => (
-      <option key={num} value={num}>
-        {num}
-      </option>
-    ))}
-  </select>
 
-  <p className="total">Total: ₹{bhurjiTotal}</p>
-</div>
-      </div>
 
       {showBhurjiInfo && (
   <div
@@ -472,7 +678,12 @@ useEffect(() => {
           color: '#e2e8f0'
         }}
       >
-        Egg Bhurji is{' '}
+        1. 1 Plate of Egg bhurji contains {' '}
+        <strong>2 eggs</strong>.
+        <br />
+        <br />
+        
+        2. Egg Bhurji is{' '}
         <strong>
           not prepared in any hostel room
         </strong>
@@ -508,7 +719,7 @@ useEffect(() => {
 )}
 
       <div className="delivery-section">
-        <h2>📦 Delivery Details</h2>
+        <h2> Delivery Details</h2>
         
         <div className="form-group">
           <label>Your Name</label>

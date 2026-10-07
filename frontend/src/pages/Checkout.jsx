@@ -71,6 +71,30 @@ useEffect(() => {
 
 }, [apiUrl])
 
+useEffect(() => {
+
+  setAddonQuantities(prev => {
+
+    const updated = { ...prev }
+
+    addOns.forEach(addon => {
+
+      if (
+        productStock[addon.id] === false
+      ) {
+        updated[addon.id] = 0
+      }
+
+    })
+
+    return updated
+
+  })
+
+}, [productStock])
+
+
+
   const {
     buyerName,
     phoneNumber,
