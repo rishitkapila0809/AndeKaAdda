@@ -5164,37 +5164,37 @@ border: 2px solid #6ea8fe;
      LOGO
      ========================= */
 
-  .navbar .brand-logo {
-    position: absolute;
+.navbar .brand-logo {
+  position: absolute;
 
-    top: 3px;
-    left: 50%;
+  top: 4px;
+  left: 12px;
 
-    transform: translateX(-50%);
+  transform: none;
 
-    width: 180px;
-    height: 45px;
+  width: auto;
+  height: 45px;
 
-    display: flex;
+  display: flex;
 
-    align-items: center;
-    justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
 
-    z-index: 10;
-  }
+  z-index: 10;
+}
 
-  .navbar .full-logo {
-    width: 170px;
-    height: auto;
+.navbar .full-logo {
+  width: 145px;
+  height: auto;
 
-    max-height: 45px;
+  max-height: 45px;
 
-    object-fit: contain;
+  object-fit: contain;
 
-    display: block;
+  display: block;
 
-    margin: 0;
-  }
+  margin: 0;
+}
 
 
   /* =========================
@@ -5217,7 +5217,7 @@ border: 2px solid #6ea8fe;
   display: flex;
 
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
   /* No background — page background shows through */
   background: transparent;
