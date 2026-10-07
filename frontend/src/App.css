@@ -5097,15 +5097,15 @@ border: 2px solid #6ea8fe;
     margin: 0;
   }
 
-  .navbar .full-logo {
-    height: 42px;
-    max-height: 42px;
-    width: auto;
-    max-width: 155px;
-    object-fit: contain;
-    display: block;
-    margin: 0;
-  }
+ .navbar .full-logo {
+  height: 52px;
+  max-height: 52px;
+  width: auto;
+  max-width: 190px;
+  object-fit: contain;
+  display: block;
+  margin: 0;
+}
 
   /* Nav List Container */
   .navbar > ul {
