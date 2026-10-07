@@ -5037,50 +5037,314 @@ border: 2px solid #6ea8fe;
 
 
 /* =========================================================
-   MOBILE
+   MOBILE PRODUCT LAYOUT
    ========================================================= */
 
 @media (max-width: 600px) {
 
+  /* Stack product cards vertically */
   .products-section {
-    grid-template-columns: 1fr 1fr;
+    display: grid;
 
-    gap: 12px;
+    grid-template-columns: 1fr;
 
-    justify-content: center;
-  }
+    justify-items: center;
 
-  .product-wrapper {
+    gap: 22px;
+
     width: 100%;
+
+    margin-bottom: 2rem;
   }
 
+
+  /* Product wrapper */
+  .product-wrapper {
+    width: min(320px, calc(100vw - 40px));
+
+    align-items: center;
+  }
+
+
+  /* Product card */
   .product-wrapper .product {
     width: 100%;
-    height: 280px;
+
+    height: 300px;
   }
 
+
+  /* Keep title centered */
   .product-title {
-    font-size: 1.45rem !important;
+    justify-content: center;
+
+    font-size: 1.65rem !important;
   }
 
-  .product-price-box {
-    font-size: 1.05rem;
 
-    padding: 6px 11px;
+  /* Price box */
+  .product-price-box {
+    font-size: 1.15rem;
+
+    padding: 7px 13px;
   }
 
   .product-price-box span {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
   }
 
+
+  /* Quantity selector below each card */
+  .product-wrapper .quantity-counter {
+    width: 100%;
+
+    margin-top: 10px;
+
+    gap: 12px;
+  }
+
+
+  /* Same Add-On button design */
   .product-wrapper .quantity-btn {
-    width: 36px;
-    height: 36px;
+    width: 31px;
+    height: 31px;
+
+    border-radius: 8px;
+
+    font-size: 19px;
+  }
+
+
+  .product-wrapper .quantity-value {
+    min-width: 18px;
+
+    font-size: 15px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE NAVBAR REDESIGN
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  /* -------------------------------------------------------
+     MAIN NAVBAR
+     Yellow top section + dark bottom action bar
+     ------------------------------------------------------- */
+
+  .navbar {
+    position: sticky;
+
+    top: 0;
+
+    width: 100%;
+
+    height: 88px;
+    min-height: 88px;
+
+    padding: 0 !important;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: center;
+
+    background: #f59e0b;
+
+    box-shadow:
+      0 4px 18px rgba(0, 0, 0, 0.15);
+
+    z-index: 1000;
+  }
+
+
+  /* -------------------------------------------------------
+     LOGO
+     Centered inside the YELLOW section
+     ------------------------------------------------------- */
+
+  .navbar .brand-logo {
+    position: absolute;
+
+    top: 6px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: auto;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 2;
+  }
+
+
+  .navbar .full-logo {
+    width: 145px;
+
+    height: auto;
+
+    display: block;
+
+    margin: 0;
+  }
+
+
+  /* -------------------------------------------------------
+     DARK ACTION BAR
+     Place Order + Hamburger
+     ------------------------------------------------------- */
+
+  .navbar > ul {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 40px;
+
+    margin: 0;
+    padding: 0 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    background: #0f172a;
+
+    box-sizing: border-box;
+
+    z-index: 3;
+  }
+
+
+  /* -------------------------------------------------------
+     PLACE ORDER
+     ------------------------------------------------------- */
+
+  .navbar > ul > li:first-child {
+    display: flex;
+
+    align-items: center;
+  }
+
+
+  .navbar > ul > li:first-child a {
+    padding: 0;
+
+    color: #f8fafc;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    text-decoration: none;
+
+    background: transparent;
+
+    transform: none;
+  }
+
+
+  .navbar > ul > li:first-child a:hover {
+    background: transparent;
+
+    transform: none;
+  }
+
+
+  /* -------------------------------------------------------
+     CUSTOMER HAMBURGER
+     ------------------------------------------------------- */
+
+  .navbar .customer-menu-wrapper {
+    position: relative;
+
+    right: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    margin-left: auto;
+  }
+
+
+  .navbar .customer-menu-btn {
+    padding: 0;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+
+    border: none;
+
+    color: #f8fafc;
 
     font-size: 22px;
+
+    line-height: 1;
+
+    cursor: pointer;
   }
 
-  .product-wrapper .quantity-counter {
-    gap: 10px;
+
+  /* -------------------------------------------------------
+     CUSTOMER DROPDOWN
+     ------------------------------------------------------- */
+
+  .navbar .customer-dropdown {
+    top: calc(100% + 8px);
+
+    right: 0;
+
+    width: 170px;
+
+    z-index: 10000;
   }
+
+
+  /* -------------------------------------------------------
+     LOGIN / SIGN UP
+     When customer isn't logged in
+     ------------------------------------------------------- */
+
+  .navbar > ul > li:nth-child(2) {
+    display: flex;
+
+    align-items: center;
+
+    margin-left: auto;
+  }
+
+
+  .navbar .customer-login-btn {
+    padding: 5px 8px;
+
+    background: transparent;
+
+    border: none;
+
+    color: #f8fafc;
+
+    font-size: 13px;
+
+    font-weight: 700;
+  }
+
 }
