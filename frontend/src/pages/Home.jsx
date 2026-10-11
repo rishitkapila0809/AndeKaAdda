@@ -5,6 +5,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import socket from '../socket'
 import Footer from '../components/Footer'
+import eggSleeping from '../assets/egg-sleeping.png'
 
 
 function Home({ apiUrl }) {
@@ -261,36 +262,51 @@ useEffect(() => {
       
       
       
+{ /*-------------------Window Closed----------------------*/ }
 
+{!isOrderingEnabled && (
+  <div className="eggspert-sleep-card">
 
-      {!isOrderingEnabled && (
-  <div
-    style={{
-      backgroundColor: '#7f1d1d',
-      color: 'white',
-      padding: '20px',
-      borderRadius: '16px',
-      marginBottom: '20px',
-      textAlign: 'center',
-      fontSize: '22px',
-      fontWeight: 'bold'
-    }}
-  >
-    🚫Sorry! Orders are currently closed 
+    <div className="eggspert-sleep-top">
 
-    <div
-      style={{
-        marginTop: '10px',
-        fontSize: '16px'
-      }}
-    >
-      You can order only from 6:30PM - 7:30PM
+      <div className="eggspert-mascot-wrap">
+  <img
+    src={eggSleeping}
+    alt="Mr. Eggspert sleeping"
+    className="eggspert-sleep-img"
+  />
+
+  <span className="floating-zzz zzz-one">Z</span>
+  <span className="floating-zzz zzz-two">z</span>
+  <span className="floating-zzz zzz-three">z</span>
+</div>
+
+      <div className="eggspert-sleep-heading">
+        <h2>Shhhhhh!!! </h2>
+        <h3>
+          Mr. <span>Eggspert</span> is sleeping.
+        </h3>
+      </div>
+
     </div>
-    
+
+    <div className="eggspert-ordering-time">
+      <span className="eggspert-clock">🕒</span>
+
+      <div>
+        <p>ORDERING WINDOW</p>
+        <h3>6:30 PM – 7:30 PM</h3>
+      </div>
+    </div>
+
+    <div className="eggspert-riddle">
+      <p>💡 Till then, try to answer:</p>
+      <h3>
+        Who came first: an egg or a hen? 🥚🐔
+      </h3>
+    </div>
+
   </div>
-
-
-
 )}
 
 
@@ -301,12 +317,14 @@ useEffect(() => {
   <div className="product-wrapper">
 
     <div
-      className={`product ${
-        productStock.boiledEggs === false
-          ? 'product-out-of-stock'
-          : ''
-      }`}
-    >
+  className={`product ${
+    productStock.boiledEggs === false
+      ? 'product-out-of-stock'
+      : ''
+  } ${
+    !isOrderingEnabled ? 'product-ordering-closed' : ''
+  }`}
+>
 
       <div className="product-bottom-content">
 
@@ -344,7 +362,8 @@ useEffect(() => {
 
     {/* BOILED EGG QUANTITY — OUTSIDE CARD */}
 
-    <div className="quantity-counter">
+    {isOrderingEnabled && (
+  <div className="quantity-counter">
 
       <button
         type="button"
@@ -387,7 +406,7 @@ useEffect(() => {
       </button>
 
     </div>
-
+    )}
   </div>
 
 
@@ -396,12 +415,14 @@ useEffect(() => {
   <div className="product-wrapper">
 
     <div
-      className={`product ${
-        productStock.eggBhurji === false
-          ? 'product-out-of-stock'
-          : ''
-      }`}
-    >
+  className={`product ${
+    productStock.eggBhurji === false
+      ? 'product-out-of-stock'
+      : ''
+  } ${
+    !isOrderingEnabled ? 'product-ordering-closed' : ''
+  }`}
+>
 
       <div className="product-bottom-content">
 
@@ -439,7 +460,8 @@ useEffect(() => {
 
     {/* BHURJI QUANTITY — OUTSIDE CARD */}
 
-    <div className="quantity-counter">
+    {isOrderingEnabled && (
+  <div className="quantity-counter">
 
       <button
         type="button"
@@ -478,9 +500,9 @@ useEffect(() => {
       </button>
 
     </div>
-
+)}
   </div>
-
+    
 </div>
 
 

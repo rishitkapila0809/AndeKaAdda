@@ -403,6 +403,10 @@ min-height: 52px;
   margin-bottom: 1rem;
 }
 
+.product-ordering-closed {
+  filter: grayscale(100%);
+}
+
 .quantity-input {
   width: 100%;
   padding: 0.75rem;
@@ -5215,4 +5219,298 @@ border: 2px solid #6ea8fe;
     z-index: 10000;
   }
 
+}
+
+
+/* ============================= */
+/* MR. EGGSPERT SLEEPING CARD    */
+/* ============================= */
+
+.eggspert-sleep-card {
+  width: 100%;
+  max-width: 680px;
+  box-sizing: border-box;
+  background: linear-gradient(145deg, #0b1730, #060d1c);
+  border: 1px solid #34445e;
+  border-radius: 16px;
+  padding: 14px;
+  margin: 0 auto 18px;
+  color: white;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+
+/* Mascot and heading */
+
+.eggspert-sleep-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.eggspert-sleep-img {
+  width: 38%;
+  max-width: 165px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.eggspert-sleep-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.eggspert-sleep-heading h2 {
+  font-size: clamp(19px, 4vw, 30px);
+  color: #ffcc00;
+  font-weight: 900;
+  margin: 0 0 8px;
+}
+
+.eggspert-sleep-heading h3 {
+  font-size: clamp(16px, 3vw, 24px);
+  color: white;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.eggspert-sleep-heading h3 span {
+  color: #ffcc00;
+}
+
+/* Ordering window */
+
+.eggspert-ordering-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #111d33;
+  border: 1px solid #eab308;
+  border-radius: 14px;
+  padding: 10px;
+  margin-top: 12px;
+}
+
+.eggspert-clock {
+  font-size: 30px;
+}
+
+.eggspert-ordering-time p {
+  color: #aebbd0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0 0 5px;
+}
+
+.eggspert-ordering-time h3 {
+  color: #ffcc00;
+  font-size: 21px;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* Riddle section */
+
+.eggspert-riddle {
+  background: #0a1427;
+  border: 1px dashed #45536b;
+  border-radius: 14px;
+  padding: 12px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.eggspert-riddle p {
+  font-size: 14px;
+  color: #e5e7eb;
+  margin: 0 0 8px;
+}
+
+.eggspert-riddle h3 {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.5;
+  color: #ffcc00;
+  margin: 0;
+}
+
+/* Mobile responsiveness */
+
+@media (max-width: 480px) {
+
+  .eggspert-sleep-card {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .eggspert-sleep-top {
+    gap: 8px;
+  }
+
+  .eggspert-mascot-wrap {
+  width: 38%;
+  max-width: 145px;
+}
+
+  .eggspert-sleep-heading h2 {
+    font-size: 19px;
+  }
+
+  .eggspert-sleep-heading h3 {
+    font-size: 16px;
+  }
+
+  .eggspert-ordering-time h3 {
+    font-size: 18px;
+  }
+
+  .eggspert-riddle h3 {
+    font-size: 15px;
+  }
+}
+
+
+/* ===== MR. EGGSPERT ANIMATIONS ===== */
+
+.eggspert-sleep-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Keep card content above the decorative stars */
+.eggspert-sleep-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Breathing mascot container */
+.eggspert-mascot-wrap {
+  position: relative;
+  width: 38%;
+  max-width: 165px;
+  flex-shrink: 0;
+  animation: eggspert-breathe 3s ease-in-out infinite;
+}
+
+.eggspert-mascot-wrap .eggspert-sleep-img {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  transform-origin: center bottom;
+}
+
+/* Gentle breathing motion */
+@keyframes eggspert-breathe {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.015);
+  }
+}
+
+/* Floating Z symbols */
+.floating-zzz {
+  position: absolute;
+  color: #ffcc00;
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.35);
+  animation: eggspert-zzz-float 3s ease-in-out infinite;
+}
+
+.zzz-one {
+  top: 30%;
+  left: 40%;
+  right: auto;
+  font-size: 23px;
+  animation-delay: 0s;
+}
+
+.zzz-two {
+  top: 30%;
+  left: 46%;
+  right: auto;
+  font-size: 17px;
+  animation-delay: 0.8s;
+}
+
+.zzz-three {
+  top: 30%;
+  left: 46%;
+  right: auto;
+  font-size: 13px;
+  animation-delay: 1.6s;
+}
+@keyframes eggspert-zzz-float {
+  0% {
+    opacity: 0;
+    transform: translate(0, 8px) scale(0.7);
+  }
+  20% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(9px, -24px) scale(1.15);
+  }
+}
+
+/* Twinkling stars across the card */
+.eggspert-sleep-card::before,
+.eggspert-sleep-card::after {
+  content: "✦";
+  position: absolute;
+  z-index: 0;
+  color: #ffcc00;
+  font-size: 15px;
+  pointer-events: none;
+  animation: eggspert-twinkle 2.5s ease-in-out infinite;
+}
+
+.eggspert-sleep-card::before {
+  top: 16%;
+  right: 8%;
+}
+
+.eggspert-sleep-card::after {
+  bottom: 25%;
+  left: 5%;
+  font-size: 11px;
+  animation-delay: 1.2s;
+}
+
+@keyframes eggspert-twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.7) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(20deg);
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .eggspert-mascot-wrap,
+  .floating-zzz,
+  .eggspert-sleep-card::before,
+  .eggspert-sleep-card::after {
+    animation: none !important;
+  }
+
+  .floating-zzz {
+    display: none;
+  }
 }
