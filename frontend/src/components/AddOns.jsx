@@ -36,14 +36,6 @@ export const addOns = [
     unit: 'per pc',
     image: spoonImage,
     maxQuantity: 5
-  },
-  {
-    id: 'rushil',
-    name: 'Rushil Randwa',
-    price: 10,
-    unit: 'per pc',
-    image: rushilImage,
-    maxQuantity: 5
   }
 
   
