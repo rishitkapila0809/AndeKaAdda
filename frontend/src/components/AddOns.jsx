@@ -2,6 +2,7 @@ import saltImage from '../assets/salt.png'
 import cokeZeroImage from '../assets/cokezero.png'
 import ketchupImage from '../assets/ketchup.png'
 import spoonImage from '../assets/spoon.png'
+import rushilImage from '../assets/rushil.png'
 
 export const addOns = [
   {
@@ -34,6 +35,14 @@ export const addOns = [
     price: 2,
     unit: 'per pc',
     image: spoonImage,
+    maxQuantity: 5
+  },
+  {
+    id: 'rushil',
+    name: 'Rushil Randwa',
+    price: 10,
+    unit: 'per pc',
+    image: rushilImage,
     maxQuantity: 5
   }
 
